@@ -1,52 +1,610 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-<meta charset="utf-8">
-<title>Directive Craft LLC — Home base for services, products, and future projects</title>
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="SOPs, operations manuals, process documentation, AI-assisted content, and digital products (apps/tools). Home base for freelance technical writing and future ventures.">
-<style>
-:root{--bg:#0b0e14;--text:#e6edf3;--muted:#9aa4b2;--accent:#58a6ff;--card:#151922;--border:#262c36}
-*{box-sizing:border-box}
-html,body{height:100%}
-body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;line-height:1.5}
-.container{max-width:960px;margin:0 auto;padding:48px 20px}
-h1{font-size:36px;margin:0 0 12px}
-.lead{font-size:18px;color:var(--muted);margin:0 0 28px}
-.card{background:var(--card);border:1px solid var(--border);padding:20px;border-radius:10px;margin:8px 0}
-.btn{display:inline-block;background:var(--accent);color:#0b0e14;padding:10px 16px;border-radius:8px;font-weight:600;text-decoration:none}
-.btn:hover{filter:brightness(1.05)}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:24px 0}
-@media(max-width:700px){.grid{grid-template-columns:1fr}}
-small{color:var(--muted)}
-.footer{margin:32px 0;color:var(--muted);font-size:14px}
-</style>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Directive Craft LLC — Process Documentation & Digital Products</title>
+  <meta name="description" content="Directive Craft turns the workflows only your people know into clean, auditable procedures anyone can follow. SOP writing, process documentation, and AI-assisted content for small businesses." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black:      #0A0A0F;
+      --panel:      #13131F;
+      --border:     #1E1E32;
+      --amber:      #FFB300;
+      --amber-dim:  #FFB30028;
+      --amber-mid:  #FFB30055;
+      --text:       #E8E8F0;
+      --muted:      #7A7A9A;
+      --subtle:     #3A3A5A;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── CANVAS ── */
+    #bgCanvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.10;
+    }
+
+    /* ── LAYOUT ── */
+    .wrapper {
+      position: relative;
+      z-index: 1;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ── NAV ── */
+    nav {
+      padding: 24px 0 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* ── LOGO ── */
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      text-decoration: none;
+    }
+
+    .logo-mark svg {
+      display: block;
+    }
+
+    .wordmark {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      line-height: 1;
+    }
+    .wordmark span { color: var(--amber); }
+
+    .badge {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--amber);
+      border: 1px solid var(--amber-mid);
+      padding: 4px 10px;
+      border-radius: 2px;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      padding: 44px 0 32px;
+      text-align: center;
+    }
+
+    .eyebrow {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(1.9rem, 5vw, 3.1rem);
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      margin-bottom: 18px;
+    }
+    h1 em { font-style: normal; color: var(--amber); }
+
+    .hero-sub {
+      font-size: 0.98rem;
+      font-weight: 300;
+      color: var(--muted);
+      max-width: 560px;
+      margin: 0 auto 28px;
+      line-height: 1.75;
+    }
+    .hero-sub strong { color: var(--text); font-weight: 400; }
+
+    /* ── CTA ── */
+    .cta-row {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      background: var(--amber);
+      color: var(--black);
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: opacity 0.2s;
+      white-space: nowrap;
+      display: inline-block;
+    }
+    .btn-primary:hover { opacity: 0.85; }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--amber);
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border: 1px solid var(--amber-mid);
+      padding: 12px 24px;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: border-color 0.2s, color 0.2s;
+      white-space: nowrap;
+      display: inline-block;
+    }
+    .btn-ghost:hover { border-color: var(--amber); }
+
+    /* ── DIVIDER ── */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 28px 0;
+    }
+
+    /* ── PILLARS ── */
+    .pillars {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      margin-bottom: 28px;
+    }
+
+    .pillar {
+      background: var(--panel);
+      padding: 24px 22px;
+    }
+
+    .pillar-label {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.63rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 10px;
+    }
+
+    .pillar-text {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+    .pillar-text strong {
+      display: block;
+      font-size: 0.94rem;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    /* ── AUTHORITY STRIP ── */
+    .spec-strip {
+      display: flex;
+      flex-wrap: wrap;
+      border: 1px solid var(--border);
+      margin-bottom: 28px;
+    }
+
+    .spec-item {
+      flex: 1 1 140px;
+      padding: 18px 20px;
+      border-right: 1px solid var(--border);
+    }
+    .spec-item:last-child { border-right: none; }
+
+    .spec-val {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--amber);
+      letter-spacing: -0.02em;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .spec-key {
+      font-size: 0.67rem;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    /* ── CALLOUT ── */
+    .callout {
+      border-left: 2px solid var(--amber);
+      padding: 18px 24px;
+      background: var(--panel);
+      margin-bottom: 28px;
+    }
+    .callout p {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+    .callout p + p { margin-top: 10px; }
+    .callout p strong { color: var(--text); font-weight: 500; }
+    .callout a {
+      color: var(--amber);
+      text-decoration: none;
+    }
+    .callout a:hover { text-decoration: underline; }
+
+    /* ── SECTION HEADER ── */
+    .section-header {
+      margin-bottom: 16px;
+    }
+    .section-label {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.63rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 6px;
+    }
+    .section-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: -0.01em;
+    }
+
+    /* ── CONTACT BLOCK ── */
+    .contact-block {
+      border: 1px solid var(--border);
+      background: var(--panel);
+      padding: 28px 28px;
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .contact-copy h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 6px;
+      letter-spacing: -0.01em;
+    }
+    .contact-copy p {
+      font-size: 0.84rem;
+      color: var(--muted);
+      line-height: 1.6;
+      max-width: 400px;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 24px 0 32px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .footer-mark {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--subtle);
+    }
+    .footer-mark span { color: var(--amber); }
+
+    .footer-right {
+      text-align: right;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 6px;
+      justify-content: flex-end;
+    }
+    .footer-links a {
+      font-size: 0.73rem;
+      color: var(--subtle);
+      text-decoration: none;
+      letter-spacing: 0.04em;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--amber); }
+
+    .footer-legal {
+      font-size: 0.68rem;
+      color: var(--subtle);
+      line-height: 1.6;
+      max-width: 340px;
+    }
+
+    /* ── MOBILE ── */
+    @media (max-width: 600px) {
+      nav { flex-direction: column; align-items: flex-start; gap: 10px; }
+      .spec-item { border-right: none; border-bottom: 1px solid var(--border); }
+      .spec-item:last-child { border-bottom: none; }
+      .footer-right { text-align: left; }
+      .footer-links { justify-content: flex-start; flex-wrap: wrap; }
+      .contact-block { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
 <body>
-<div class="container">
-  <h1>Directive Craft LLC</h1>
-  <p class="lead">Home base for digital products, professional documents, and future project development.</p>
 
-  <div class="card">
-    <strong>Services</strong>
-    <p>SOP writing · Process documentation · Operations manuals · Technical writing · AI-assisted content for small businesses.</p>
-    <p>We build documents built to work — not just to exist.</p>
-  </div>
+<canvas id="bgCanvas"></canvas>
 
-  <div class="grid">
-    <div class="card">
-      <strong>Digital Products</strong>
-      <p>Apps and tools, including a brainwave entrainment app (direct replacement for BWGen, no longer supported).</p>
+<div class="wrapper">
+
+  <!-- NAV -->
+  <nav>
+    <a class="logo" href="/">
+      <!-- Logo mark: geometric diamond — original mark, no trademark needed -->
+      <div class="logo-mark">
+        <svg width="22" height="26" viewBox="0 0 22 26" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <!-- Outer diamond -->
+          <polygon points="11,1 21,9 11,25 1,9" stroke="#FFB300" stroke-width="1.5" fill="none" stroke-linejoin="round"/>
+          <!-- Inner diamond (accent depth) -->
+          <polygon points="11,6 16,10.5 11,20 6,10.5" stroke="#FFB300" stroke-width="0.75" fill="none" stroke-linejoin="round" opacity="0.4"/>
+          <!-- Center point -->
+          <circle cx="11" cy="13" r="1.2" fill="#FFB300" opacity="0.7"/>
+        </svg>
+      </div>
+      <div class="wordmark">Directive<span>Craft</span></div>
+    </a>
+    <div class="badge">LLC · Sheridan, WY</div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <p class="eyebrow">Process Documentation · AI Content · Digital Products</p>
+    <h1>The process lives<br>in one head.<br><em>We write it down.</em></h1>
+    <p class="hero-sub">
+      Directive Craft turns the workflows only your people know into
+      <strong>clean, auditable procedures anyone can follow.</strong>
+      Plain language. Built to be used — not filed and forgotten.
+    </p>
+    <div class="cta-row">
+      <a class="btn-primary" href="mailto:contact@directivecraft.com">Discuss a Project</a>
+      <a class="btn-ghost" href="https://freqcraft.app" target="_blank" rel="noopener">See Our App →</a>
     </div>
-    <div class="card">
-      <strong>Future Projects</strong>
-      <p>This site is the gateway for upcoming entrepreneurial ventures.</p>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- SERVICES -->
+  <div class="section-header">
+    <div class="section-label">What We Do</div>
+    <div class="section-title">Services for small businesses that need documentation built to work.</div>
+  </div>
+
+  <div class="pillars">
+    <div class="pillar">
+      <div class="pillar-label">Process Documentation</div>
+      <div class="pillar-text">
+        <strong>Tribal knowledge to written procedure.</strong>
+        We interview the person who knows, map every step, and deliver a procedure their replacement can run on day one.
+      </div>
+    </div>
+    <div class="pillar">
+      <div class="pillar-label">SOP Writing</div>
+      <div class="pillar-text">
+        <strong>Procedures built for compliance and clarity.</strong>
+        Standard Operating Procedures for client intake, service delivery, safety, and operations — formatted for real-world use, not a binder shelf.
+      </div>
+    </div>
+    <div class="pillar">
+      <div class="pillar-label">AI-Assisted Content</div>
+      <div class="pillar-text">
+        <strong>Small business content that doesn't sound like AI wrote it.</strong>
+        Website copy, service descriptions, and operational documents — drafted fast, refined until they sound like you.
+      </div>
     </div>
   </div>
 
-  <a class="btn" href="#" onclick="this.href='mai'+'lto:dc'+'raft@'+'duck.com';return true;">Contact</a>
-
-  <div class="footer">
-    <small>directivecraft.com • Δ 2026 Directive Craft LLC</small>
+  <!-- AUTHORITY STRIP -->
+  <div class="spec-strip">
+    <div class="spec-item">
+      <div class="spec-val">12</div>
+      <div class="spec-key">Years supervising procedures</div>
+    </div>
+    <div class="spec-item">
+      <div class="spec-val">0</div>
+      <div class="spec-key">Revisions requested on reports</div>
+    </div>
+    <div class="spec-item">
+      <div class="spec-val">SMB</div>
+      <div class="spec-key">Small business focus only</div>
+    </div>
+    <div class="spec-item">
+      <div class="spec-val">AI+</div>
+      <div class="spec-key">Human-refined, not AI-dumped</div>
+    </div>
   </div>
+
+  <!-- AUTHORITY CALLOUT -->
+  <div class="callout">
+    <p>
+      <strong>Twelve years in corrections.</strong> Advancing from officer to Lieutenant across two facilities, including shift commander over 28 staff. In a department where a missing step or an unclear instruction carried real consequences, a reputation formed for writing procedures that required no revision — in a department known for sending work back covered in red ink. Other officers sought out that work as a template before submitting their own.
+    </p>
+    <p>
+      That same skill — taking a messy, undocumented process and turning it into something clear, sequential, and reliable under pressure — is what Directive Craft applies to small businesses.
+    </p>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- PRODUCTS -->
+  <div class="section-header">
+    <div class="section-label">Products</div>
+    <div class="section-title">Digital tools built on the same zero-data, zero-compromise principle.</div>
+  </div>
+
+  <div class="callout">
+    <p>
+      <strong style="color: var(--amber);">FreqCraft</strong> — Precision binaural and isochronic tone generator for Android.
+      Every Hz value visible. Every parameter yours to edit. No account. No tracking. No subscription.
+      One-time purchase. The focused entrainment tool the community has been missing since Brainwave Generator left Android.
+    </p>
+    <p style="margin-top: 10px;">
+      <a href="https://freqcraft.app" target="_blank" rel="noopener">freqcraft.app →</a>
+      &nbsp;&nbsp;
+      <span style="font-size: 0.8rem; color: var(--subtle);">Coming to Google Play · Built by Directive Craft LLC</span>
+    </p>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- CONTACT -->
+  <div class="contact-block">
+    <div class="contact-copy">
+      <h2>Have a process that needs documenting?</h2>
+      <p>Describe the workflow — or the problem. We'll tell you if it's a fit and how we'd approach it. No pitch. No upsell.</p>
+    </div>
+    <a class="btn-primary email-link" href="#">Get in Touch</a>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-mark">Directive<span>Craft</span> &nbsp;·&nbsp; LLC</div>
+    <div class="footer-right">
+      <div class="footer-links">
+        <a href="https://freqcraft.app" target="_blank" rel="noopener">FreqCraft</a>
+        <a class="email-link" href="#">Contact</a>
+      </div>
+      <div class="footer-legal">Sheridan, Wyoming · Process documentation, SOP writing, and AI-assisted content for small businesses.</div>
+    </div>
+  </footer>
+
 </div>
+
+<script>
+  // ── BACKGROUND: slow drifting horizontal document lines ──
+  // Evokes: structure, documentation, procedure — contrasts with FreqCraft's sine waves
+  var canvas = document.getElementById('bgCanvas');
+  var ctx    = canvas.getContext('2d');
+  var W, H;
+  var lines  = [];
+  var LINE_COUNT = 18;
+
+  function resize() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+    initLines();
+  }
+
+  function initLines() {
+    lines = [];
+    for (var i = 0; i < LINE_COUNT; i++) {
+      lines.push({
+        y:     (H / LINE_COUNT) * i + Math.random() * (H / LINE_COUNT),
+        speed: 0.08 + Math.random() * 0.12,
+        width: 0.3 + Math.random() * 0.5,
+        alpha: 0.2 + Math.random() * 0.6,
+        len:   0.3 + Math.random() * 0.5,
+        xOff:  Math.random() * W,
+      });
+    }
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    ctx.strokeStyle = 'rgba(255,179,0,1)';
+
+    lines.forEach(function(ln) {
+      ln.y += ln.speed;
+      if (ln.y > H + 2) ln.y = -2;
+
+      var lineW = W * ln.len;
+      var startX = (ln.xOff % W);
+
+      ctx.globalAlpha = ln.alpha;
+      ctx.lineWidth   = ln.width;
+      ctx.beginPath();
+      ctx.moveTo(startX, ln.y);
+      ctx.lineTo(startX + lineW, ln.y);
+      ctx.stroke();
+
+      // wrap if line extends past canvas
+      if (startX + lineW > W) {
+        ctx.beginPath();
+        ctx.moveTo(0, ln.y);
+        ctx.lineTo((startX + lineW) - W, ln.y);
+        ctx.stroke();
+      }
+    });
+
+    ctx.globalAlpha = 1;
+    requestAnimationFrame(draw);
+  }
+
+  window.addEventListener('resize', resize);
+  resize();
+  draw();
+
+  // ── EMAIL OBFUSCATION ──
+  // Email is never in the HTML source — assembled at runtime so scrapers can't harvest it.
+  // Change the two parts below if the address changes; never put the full address in HTML.
+  (function() {
+    var u = 'contact';
+    var d = 'directivecraft.com';
+    var addr = u + '@' + d;
+    document.querySelectorAll('.email-link').forEach(function(el) {
+      el.href = 'mailto:' + addr;
+    });
+  })();
+</script>
+
 </body>
 </html>
