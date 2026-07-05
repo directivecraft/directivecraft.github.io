@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="canonical" href="https://www.directivecraft.com/samples/" />
-  <title>Sample Work — Pre-Launch QA Release Gate · Directive Craft LLC</title>
-  <meta name="description" content="A real, working pre-launch QA Standard Operating Procedure — automated and manual test coverage, severity triage, and an explicit release gate. Sample process documentation by Directive Craft LLC." />
+  <title>How FreqCraft Is Tested — Release QA · Directive Craft LLC</title>
+  <meta name="description" content="How Directive Craft tests FreqCraft before release: 56 automated tests, a two-device physical release gate, severity-triaged known issues, and a written ship / no-ship decision." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -346,13 +346,13 @@
 
   <!-- HEADER -->
   <div class="page-header">
-    <p class="eyebrow">Sample Work · Process Documentation</p>
-    <h1>A pre-launch QA release gate,<br>start to finish.</h1>
+    <p class="eyebrow">Engineering · Quality Assurance</p>
+    <h1>How FreqCraft is tested.</h1>
     <p class="lede">
-      This is a real, working Standard Operating Procedure — the one that decides whether a
-      mobile app ships. It answers a single question under deadline pressure:
-      <strong>is this build safe to release?</strong> Below is the document itself, reproduced
-      in full and sanitized only of internal file paths.
+      Before FreqCraft ships, it has to earn it. This is the actual release procedure the app is
+      held to — the one that answers a single question under pressure:
+      <strong>is this build safe to release?</strong> Reproduced in full below, sanitized only of
+      internal file paths. Nothing hidden — including what the tests caught.
     </p>
   </div>
 
@@ -372,13 +372,13 @@
 
   <!-- META STRIP -->
   <div class="meta-strip">
-    <div class="meta-cell"><div class="meta-val">3</div><div class="meta-key">Test layers</div></div>
-    <div class="meta-cell"><div class="meta-val">29</div><div class="meta-key">Automated tests</div></div>
+    <div class="meta-cell"><div class="meta-val">56</div><div class="meta-key">Automated tests</div></div>
     <div class="meta-cell"><div class="meta-val">22</div><div class="meta-key">Manual procedures</div></div>
+    <div class="meta-cell"><div class="meta-val">2</div><div class="meta-key">Physical test devices</div></div>
     <div class="meta-cell"><div class="meta-val">Sev</div><div class="meta-key">Triaged known issues</div></div>
-    <div class="meta-cell"><div class="meta-val">Gate</div><div class="meta-key">Explicit ship / no-ship</div></div>
+    <div class="meta-cell"><div class="meta-val">Gate</div><div class="meta-key">Written ship / no-ship</div></div>
   </div>
-  <p class="sanitize-note">What it demonstrates: test-scope definition, layered automated + manual coverage, severity triage, and a release gate with a written pass condition. In execution, the automated suite caught a readout-overflow defect before it ever reached a device.</p>
+  <p class="sanitize-note">56 automated tests (44 on-device adversarial checks + 12 unit tests) and 22 manual procedures, run on two physical handsets. Counts verified against the source before publishing. The automated suite has already earned its keep twice — it caught a readout-overflow defect, and later a teardown race that four rounds of code review missed (both documented below).</p>
 
   <hr class="divider" />
 
@@ -386,8 +386,8 @@
 
   <div class="doc-title">FreqCraft Mobile — QA Test SOP</div>
   <div class="doc-meta">
-    Version 1.2 &nbsp;·&nbsp; 2026-06-22 &nbsp;·&nbsp; Directive Craft LLC<br>
-    App: FreqCraft Android 1.0.0 — release candidate (Flutter/Dart) &nbsp;·&nbsp; Status: ACTIVE — pre-launch release gate
+    Version 1.3 &nbsp;·&nbsp; 2026-07-05 &nbsp;·&nbsp; Directive Craft LLC<br>
+    App: FreqCraft Android 1.0.0 (Flutter/Dart) &nbsp;·&nbsp; Status: ACTIVE — release QA procedure
   </div>
 
   <div class="phase-sub" style="margin-top:18px;">
@@ -406,9 +406,9 @@
   <div class="phase-sub">The adversarial integration suite is the first gate. It runs the build through input it was never meant to receive, on a tethered device, and must pass clean before a human tests anything.</div>
 
   <div class="envbox">
-    <b>Location:</b> integration_test/app_test.dart<br>
+    <b>Location:</b> integration_test/app_test.dart (44 on-device) · test/ (12 unit)<br>
     <b>Run:</b> <code>flutter test integration_test -d &lt;device-id&gt;</code><br>
-    <b>Gate:</b> 29 tests, all green before manual testing begins.
+    <b>Gate:</b> 44 on-device adversarial checks + 12 unit tests — 56 total, all green before manual testing begins.
   </div>
 
   <div class="test">
@@ -425,7 +425,7 @@
       <li>Timed-session REMAINING readout show / clear.</li>
     </ul>
     <div class="result note"><b>Implementation note</b> — no <code>pumpAndSettle</code>: the live waveform animates continuously, so it never returns and the suite would hang. Use <code>pump(Duration)</code> only.</div>
-    <div class="result pass"><b>Pass</b> — 29/29 green on the tethered device. Any failure is fixed and the suite re-run before Phase A.</div>
+    <div class="result pass"><b>Pass</b> — 44/44 adversarial checks green on the tethered device, plus 12/12 unit tests. Any failure is fixed and the suite re-run before Phase A.</div>
   </div>
 
   <!-- PHASE A -->
@@ -685,7 +685,7 @@
     <h3>Release Gate Checklist</h3>
     <p style="font-size:0.84rem;color:var(--muted);margin-bottom:14px;line-height:1.6;">Every item must be checked before the app bundle is submitted.</p>
     <ul class="steps">
-      <li>Automated adversarial suite: 29/29 green on device.</li>
+      <li>Automated suite: 44/44 adversarial checks + 12/12 unit tests green on device.</li>
       <li>B-1: all Phase A tests pass on the physical device.</li>
       <li>B-2 / B-3: binaural beat perception and isochronic pulses confirmed.</li>
       <li>B-4: background mixing confirmed — does not mute other apps.</li>
@@ -698,8 +698,9 @@
   <!-- KNOWN GAPS -->
   <div class="phase-sub" style="margin-top:34px;"><strong>Known gaps and open issues</strong> — disclosed and triaged, not hidden.</div>
   <table class="gaps">
-    <thead><tr><th>ID</th><th>Severity</th><th>Description</th><th>Plan</th></tr></thead>
+    <thead><tr><th>ID</th><th>Severity</th><th>Description</th><th>Status / Plan</th></tr></thead>
     <tbody>
+      <tr><td>STOP</td><td>Low</td><td>Teardown race in the stop path — a reference used after an <code>await</code> without a mounted-check could log an error if the screen was dismissed mid-stop. Surfaced by the expanded test suite, not by four rounds of code review (including a maximum-effort audit).</td><td>Fixed + verified</td></tr>
       <tr><td>P4</td><td>Low</td><td>A dead validation method in the engine — never called; validation handled in the UI.</td><td>Later release</td></tr>
       <tr><td>P5</td><td>Low</td><td>Emulator channel reversal at low beat frequency; reproducible cause not identified.</td><td>Device test</td></tr>
       <tr><td>ENG</td><td>Deferred</td><td>Engine hardening (deterministic stop poll, completer-based fade cancel, band-limited waveforms).</td><td>Post-launch</td></tr>
@@ -711,16 +712,17 @@
   <div class="version-log">
     <b>v1.0</b> &nbsp;2026-06-12 — Initial release. Built from the QA SOP handoff.<br>
     <b>v1.1</b> &nbsp;2026-06-14 — Accordion preset UI, preset names, contact email; Phase A + Phase B.<br>
-    <b>v1.2</b> &nbsp;2026-06-22 — Stamped to app 1.0.0. Added the automated adversarial suite (29 tests) as the first gate; added the Live Waveform Visualizer section (A-13); added the timer fade-out display spec (A-9) and the numpad-focus regression (A-4). Sanitized internal paths; defect forensics tracked separately in the bug log.
+    <b>v1.2</b> &nbsp;2026-06-22 — Stamped to app 1.0.0. Added the automated adversarial suite (29 tests) as the first gate; added the Live Waveform Visualizer section (A-13); added the timer fade-out display spec (A-9) and the numpad-focus regression (A-4). Sanitized internal paths; defect forensics tracked separately in the bug log.<br>
+    <b>v1.3</b> &nbsp;2026-07-05 — Adversarial suite expanded 29 → 44 on-device checks; added 12 unit tests (56 automated total). Physical testing run on two handsets (Moto G7 Power + Pixel 6 Pro). Logged the teardown-race defect (STOP) the suite caught after code review missed it — fixed and verified. Counts verified against source.
   </div>
 
   <!-- CTA -->
   <div class="cta-block">
     <div>
-      <h2>Have a process that needs documenting?</h2>
-      <p>This is what tribal knowledge looks like once it's written down, ordered, and made testable. Describe your workflow — we'll tell you if it's a fit.</p>
+      <h2>This is the app it ships.</h2>
+      <p>FreqCraft is built and tested the way this page describes — precision audio, zero data collection, one-time purchase. See it for yourself.</p>
     </div>
-    <a class="btn-primary email-link" href="#">Discuss a Project</a>
+    <a class="btn-primary" href="https://freqcraft.app" target="_blank" rel="noopener">See FreqCraft →</a>
   </div>
 
   <!-- FOOTER -->
