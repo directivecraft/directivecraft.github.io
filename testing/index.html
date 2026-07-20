@@ -755,4 +755,47 @@
         xOff: Math.random() * W,
       });
     }
-  
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    ctx.strokeStyle = 'rgba(255,179,0,1)';
+    lines.forEach(function(ln) {
+      ln.y += ln.speed;
+      if (ln.y > H + 2) ln.y = -2;
+      var lineW = W * ln.len;
+      var startX = (ln.xOff % W);
+      ctx.globalAlpha = ln.alpha;
+      ctx.lineWidth   = ln.width;
+      ctx.beginPath();
+      ctx.moveTo(startX, ln.y);
+      ctx.lineTo(startX + lineW, ln.y);
+      ctx.stroke();
+      if (startX + lineW > W) {
+        ctx.beginPath();
+        ctx.moveTo(0, ln.y);
+        ctx.lineTo((startX + lineW) - W, ln.y);
+        ctx.stroke();
+      }
+    });
+    ctx.globalAlpha = 1;
+    requestAnimationFrame(draw);
+  }
+
+  window.addEventListener('resize', resize);
+  resize();
+  draw();
+
+  // Email obfuscation — address is never in the HTML source; assembled at runtime.
+  (function() {
+    var u = 'contact';
+    var d = 'directivecraft.com';
+    var addr = u + '@' + d;
+    document.querySelectorAll('.email-link').forEach(function(el) {
+      el.href = 'mailto:' + addr;
+    });
+  })();
+</script>
+
+</body>
+</html>
