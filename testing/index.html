@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="canonical" href="https://www.directivecraft.com/testing/" />
   <title>How FreqCraft Is Tested — Release QA · Directive Craft LLC</title>
-  <meta name="description" content="How Directive Craft tests FreqCraft before release: 56 automated tests, a two-device physical release gate, severity-triaged known issues, and a written ship / no-ship decision." />
+  <meta name="description" content="How Directive Craft tests FreqCraft before release: 211 automated tests, a two-device physical release gate, severity-triaged known issues, and a written ship / no-ship decision." />
   <link rel="icon" href="/favicon.ico" sizes="any" />
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png" />
   <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
@@ -373,13 +373,13 @@
 
   <!-- META STRIP -->
   <div class="meta-strip">
-    <div class="meta-cell"><div class="meta-val">56</div><div class="meta-key">Automated tests</div></div>
+    <div class="meta-cell"><div class="meta-val">211</div><div class="meta-key">Automated tests</div></div>
     <div class="meta-cell"><div class="meta-val">22</div><div class="meta-key">Manual procedures</div></div>
     <div class="meta-cell"><div class="meta-val">2</div><div class="meta-key">Physical test devices</div></div>
     <div class="meta-cell"><div class="meta-val">Sev</div><div class="meta-key">Triaged known issues</div></div>
     <div class="meta-cell"><div class="meta-val">Gate</div><div class="meta-key">Written ship / no-ship</div></div>
   </div>
-  <p class="sanitize-note">56 automated tests (44 on-device adversarial checks + 12 unit tests) and 22 manual procedures, run on two physical handsets. Counts verified against the source before publishing. The automated suite has already earned its keep twice — it caught a readout-overflow defect, and later a teardown race that four rounds of code review missed (both documented below).</p>
+  <p class="sanitize-note">211 automated tests and 22 manual procedures, run on two physical handsets. Counts verified against the source before publishing. The automated suite has already earned its keep twice — it caught a readout-overflow defect, and later a teardown race that four rounds of code review missed (both documented below).</p>
 
   <hr class="divider" />
 
@@ -404,12 +404,12 @@
 
   <!-- AUTOMATED -->
   <div class="phase-banner">Automated Coverage — Run First</div>
-  <div class="phase-sub">The adversarial integration suite is the first gate. It runs the build through input it was never meant to receive, on a tethered device, and must pass clean before a human tests anything.</div>
+  <div class="phase-sub">The adversarial suite is the first gate. It runs the build through input it was never meant to receive, and must pass clean before a human tests anything. It needs no device and no tether, so it runs on every change rather than once per release.</div>
 
   <div class="envbox">
-    <b>Location:</b> integration_test/app_test.dart (44 on-device) · test/ (12 unit)<br>
-    <b>Run:</b> <code>flutter test integration_test -d &lt;device-id&gt;</code><br>
-    <b>Gate:</b> 44 on-device adversarial checks + 12 unit tests — 56 total, all green before manual testing begins.
+    <b>Location:</b> test/ — 15 files, 211 widget and unit tests, pumped at 720x1604<br>
+    <b>Run:</b> <code>flutter analyze</code> then <code>flutter test</code><br>
+    <b>Gate:</b> analyze clean AND 211/211 green before manual testing begins. Analyze gates the build, not the other way round: a missing import fails a Gradle build in 49 seconds that analyze catches in four.
   </div>
 
   <div class="test">
@@ -426,7 +426,7 @@
       <li>Timed-session REMAINING readout show / clear.</li>
     </ul>
     <div class="result note"><b>Implementation note</b> — no <code>pumpAndSettle</code>: the live waveform animates continuously, so it never returns and the suite would hang. Use <code>pump(Duration)</code> only.</div>
-    <div class="result pass"><b>Pass</b> — 44/44 adversarial checks green on the tethered device, plus 12/12 unit tests. Any failure is fixed and the suite re-run before Phase A.</div>
+    <div class="result pass"><b>Pass</b> — 211/211 green, about 16 seconds, no device. Any failure is fixed and the suite re-run before Phase A.</div>
   </div>
 
   <!-- PHASE A -->
@@ -586,7 +586,7 @@
   <div class="phase-banner">Phase B — Physical Device Release Gate</div>
   <div class="phase-sub">
     <strong>Prerequisites:</strong> automated suite green; all Phase A items PASS or NOTE (no unresolved FAILs).<br>
-    <strong>Devices:</strong> Moto G7 Power (wired-audio reference, 3.5mm jack); Pixel 6 Pro (stock Android, USB-C). The release-validation install sideloads the signed app bundle.
+    <strong>Devices:</strong> Moto G7 Power (Android 10, wired-audio reference, 3.5mm jack); Moto G 2025 (Android 16, current-API reference). Oldest supported and newest supported, so a release is exercised at both ends of the range it claims. The release-validation install sideloads the signed app bundle.
   </div>
 
   <div class="test">
@@ -686,7 +686,7 @@
     <h3>Release Gate Checklist</h3>
     <p style="font-size:0.84rem;color:var(--muted);margin-bottom:14px;line-height:1.6;">Every item must be checked before the app bundle is submitted.</p>
     <ul class="steps">
-      <li>Automated suite: 44/44 adversarial checks + 12/12 unit tests green on device.</li>
+      <li>Automated suite: analyze clean and 211/211 green.</li>
       <li>B-1: all Phase A tests pass on the physical device.</li>
       <li>B-2 / B-3: binaural beat perception and isochronic pulses confirmed.</li>
       <li>B-4: background mixing confirmed — does not mute other apps.</li>
@@ -714,7 +714,8 @@
     <b>v1.0</b> &nbsp;2026-06-12 — Initial release. Built from the QA SOP handoff.<br>
     <b>v1.1</b> &nbsp;2026-06-14 — Accordion preset UI, preset names, contact email; Phase A + Phase B.<br>
     <b>v1.2</b> &nbsp;2026-06-22 — Stamped to app 1.0.0. Added the automated adversarial suite (29 tests) as the first gate; added the Live Waveform Visualizer section (A-13); added the timer fade-out display spec (A-9) and the numpad-focus regression (A-4). Sanitized internal paths; defect forensics tracked separately in the bug log.<br>
-    <b>v1.3</b> &nbsp;2026-07-05 — Adversarial suite expanded 29 → 44 on-device checks; added 12 unit tests (56 automated total). Physical testing run on two handsets (Moto G7 Power + Pixel 6 Pro). Logged the teardown-race defect (STOP) the suite caught after code review missed it — fixed and verified. Counts verified against source.
+    <b>v1.3</b> &nbsp;2026-07-05 — Adversarial suite expanded 29 → 44 on-device checks; added 12 unit tests (56 automated total). Physical testing run on two handsets (Moto G7 Power + Pixel 6 Pro). Logged the teardown-race defect (STOP) the suite caught after code review missed it — fixed and verified. Counts verified against source.<br>
+    <b>v1.4</b> &nbsp;2026-08-29 — Stamped to app 1.1.0 (five-voice sessions). Automated coverage restated: <b>211 widget and unit tests</b> replacing the 56, and the suite no longer needs a tethered device, so it runs on every change instead of once per release. Fleet updated — the Pixel 6 Pro is out; the Moto G 2025 (Android 16) is in, pairing oldest-supported with newest-supported. Counts verified against source: 15 files, 211 green, analyze clean.
   </div>
 
   <!-- CTA -->
