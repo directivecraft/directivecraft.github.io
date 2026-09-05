@@ -1,0 +1,138 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-05T00:00:00Z",
+  "title": "Design System: DirectiveCraft",
+  "extensions": {
+    "colorMeta": {
+      "ink":       { "role": "neutral", "displayName": "Diazo Blue Ground", "canonical": "#14304C", "tonalRamp": ["#081726", "#0C2036", "#102A45", "#14304C", "#1E4266", "#2E5C86", "#5D8AAE", "#A9C6DC"] },
+      "ink-sunk":  { "role": "neutral", "displayName": "Sunk Blue", "canonical": "#10283F", "tonalRamp": ["#06131F", "#0A1D2E", "#0D2337", "#10283F", "#183A59", "#265379", "#5686A6", "#A4C4D9"] },
+      "rule":      { "role": "neutral", "displayName": "Rule Blue", "canonical": "#2E5175", "tonalRamp": ["#132435", "#1C3550", "#25436A", "#2E5175", "#3E6A97", "#5B87B3", "#8DAECC", "#C3D6E6"] },
+      "rule-soft": { "role": "neutral", "displayName": "Soft Rule Blue", "canonical": "#23415F", "tonalRamp": ["#0F1E2C", "#172D42", "#1D3750", "#23415F", "#345C82", "#5081AB", "#84A9C9", "#BDD3E4"] },
+      "chalk":     { "role": "neutral", "displayName": "Chalk", "canonical": "#EEF2F6", "tonalRamp": ["#3A4750", "#556670", "#748893", "#95A9B4", "#B4C4CD", "#D0DBE2", "#E3EAEF", "#EEF2F6"] },
+      "chalk-dim": { "role": "neutral", "displayName": "Dim Chalk", "canonical": "#A6C1D8", "tonalRamp": ["#2C3E4D", "#3F5566", "#556E82", "#6E889D", "#88A2B7", "#A6C1D8", "#C3D6E6", "#E1ECF4"] },
+      "cyan":      { "role": "tertiary", "displayName": "Diazo Cyan", "canonical": "#6FA6C8", "tonalRamp": ["#1E3B4C", "#2C556C", "#3B6F8D", "#4E88A8", "#6FA6C8", "#8FBCD7", "#B0D1E4", "#D3E6F1"] },
+      "signal":    { "role": "primary", "displayName": "Diazo Print Orange", "canonical": "#F26E4C", "tonalRamp": ["#4A1608", "#6E2110", "#95311C", "#BF472C", "#E25A3D", "#F26E4C", "#F79378", "#FBC0AF"] }
+    },
+    "typographyMeta": {
+      "display":  { "displayName": "Display / H1", "purpose": "The studio's one sentence and the wordmark. Archivo 700, left-aligned, max 19ch." },
+      "headline": { "displayName": "Headline", "purpose": "Register entry names (FreqCraft). Archivo 700; muted 600 in dim chalk for unshipped." },
+      "title":    { "displayName": "Title / H2", "purpose": "Section headers. Archivo 700 uppercase." },
+      "body":     { "displayName": "Body", "purpose": "Public Sans prose; emphasis is weight 500 in chalk. Measure 54-62ch." },
+      "label":    { "displayName": "Label", "purpose": "JetBrains Mono uppercase field keys and readout labels, in cyan." },
+      "data":     { "displayName": "Data value", "purpose": "JetBrains Mono 500 tabular-nums readout numbers." }
+    },
+    "shadows": [],
+    "motion": [
+      { "name": "stamp-in", "value": "560ms cubic-bezier(0.16, 1, 0.3, 1) both", "purpose": "Release-gate PASS stamp stamps in from rotate(-7deg) scale(1.22) opacity 0 when scrolled into view. The only authored motion moment." },
+      { "name": "cap-in", "value": "620ms 120ms ease-out both", "purpose": "Release-gate caption slides up 6px alongside the stamp." },
+      { "name": "arrow-nudge", "value": "transform 0.16s ease", "purpose": "Trailing arrow on the primary action translates 4px on hover." },
+      { "name": "underline-fade", "value": "text-decoration-color 0.15s ease", "purpose": "Inline link underline animates from 55% to full signal on hover." },
+      { "name": "reduced-motion", "value": "@media (prefers-reduced-motion: reduce)", "purpose": "All animation removed; stamp static; scroll-behavior auto; arrow transition off." }
+    ],
+    "breakpoints": [
+      { "name": "compact", "value": "720px" }
+    ],
+    "layout": {
+      "sheet": "48rem centred; border-left 1px var(--rule), border-right 1px var(--rule-soft) carried by header, main, footer independently",
+      "prose": "44rem via .col wrapper",
+      "pad": "clamp(20px, 5vw, 40px) horizontal via inner .sheet wrapper",
+      "frame": "body::before fixed 1px solid var(--rule-soft), inset 9px (5px at <=720px), z-index 5",
+      "sectionRhythm": "section.block clamp(34px,4.5vw,48px); statement clamp(40px,6vw,64px); contact clamp(44px,7vw,64px); blocks separated by 1px var(--rule-soft); masthead/footer seams 2px var(--cyan)"
+    }
+  },
+  "components": [
+    {
+      "name": "Primary Action",
+      "kind": "button",
+      "refersTo": "action-primary",
+      "description": "The one call to action — a mono underline command, not a button. Used for Open FreqCraft and Contact the studio.",
+      "html": "<a class=\"ds-act\" href=\"#\">Open FreqCraft <span class=\"ds-act-arr\">&rarr;</span></a>",
+      "css": ".ds-act { font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 0.9rem; font-weight: 500; letter-spacing: 0.02em; color: #F26E4C; text-decoration: none; border-bottom: 1px solid #F26E4C; padding-bottom: 3px; display: inline-block; } .ds-act-arr { display: inline-block; transition: transform 0.16s ease; } .ds-act:hover { border-bottom-width: 2px; padding-bottom: 2px; } .ds-act:hover .ds-act-arr { transform: translateX(4px); } .ds-act:focus-visible { outline: 2px solid #F26E4C; outline-offset: 3px; border-radius: 1px; }"
+    },
+    {
+      "name": "Inline Link",
+      "kind": "custom",
+      "refersTo": null,
+      "description": "Prose link — signal text, thin underline that deepens on hover; no colour change.",
+      "html": "<p style=\"color:#A6C1D8;font-family:'Public Sans',system-ui,sans-serif\">The <a class=\"ds-link\" href=\"#\">privacy record</a> lists every category.</p>",
+      "css": ".ds-link { color: #F26E4C; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.18em; text-decoration-color: color-mix(in srgb, #F26E4C 55%, transparent); transition: text-decoration-color 0.15s ease; } .ds-link:hover { text-decoration-color: #F26E4C; } .ds-link:focus-visible { outline: 2px solid #F26E4C; outline-offset: 3px; border-radius: 1px; }"
+    },
+    {
+      "name": "Readout Band",
+      "kind": "custom",
+      "refersTo": "readout-band",
+      "description": "Recessed instrument strip reporting studio measurements. The only tonal layer and the only filled region in the system.",
+      "html": "<div class=\"ds-readout\"><div class=\"ds-readout-grid\"><div class=\"ds-cell\"><span class=\"ds-cell-k\">Automated tests</span><span class=\"ds-cell-v\">211<small>/211</small></span></div><div class=\"ds-cell\"><span class=\"ds-cell-k\">Data points</span><span class=\"ds-cell-v\">000</span></div><div class=\"ds-cell\"><span class=\"ds-cell-k\">Release devices</span><span class=\"ds-cell-v\">02</span></div><div class=\"ds-cell\"><span class=\"ds-cell-k\">Subscriptions</span><span class=\"ds-cell-v\">00</span></div></div></div>",
+      "css": ".ds-readout { background: #10283F; border-top: 1px solid #2E5175; border-bottom: 1px solid #2E5175; } .ds-readout-grid { display: grid; grid-template-columns: repeat(4, 1fr); padding: 4px 40px; } .ds-cell { padding: 18px 22px 16px; border-left: 1px solid #23415F; } .ds-cell:first-child { border-left: 0; padding-left: 0; } .ds-cell:last-child { padding-right: 0; } .ds-cell-k { display: block; margin-bottom: 9px; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: #6FA6C8; } .ds-cell-v { font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: clamp(1.2rem, 3.2vw, 1.6rem); font-weight: 500; color: #EEF2F6; font-variant-numeric: tabular-nums; letter-spacing: 0.01em; } .ds-cell-v small { color: #A6C1D8; font-size: 0.72em; font-weight: 400; } @media (max-width: 720px) { .ds-readout-grid { grid-template-columns: 1fr 1fr; } .ds-cell { border-left: 0; border-top: 1px solid #23415F; padding: 15px 16px; } .ds-cell:nth-child(2), .ds-cell:nth-child(4) { border-left: 1px solid #23415F; } .ds-cell:first-child, .ds-cell:nth-child(2) { border-top: 0; } }"
+    },
+    {
+      "name": "Clause Register Row",
+      "kind": "custom",
+      "refersTo": "clause-status",
+      "description": "One checkable commitment: ordinal / name / PASS status, with detail spanning below.",
+      "html": "<div class=\"ds-clause\"><span class=\"ds-clause-no\">&sect;1</span><span class=\"ds-clause-name\">Zero data</span><span class=\"ds-clause-status\">PASS</span><span class=\"ds-clause-detail\">No analytics, no cookies, no third-party requests, in the app or on this page.</span></div>",
+      "css": ".ds-clause { display: grid; grid-template-columns: 3.2rem 1fr auto; column-gap: 20px; row-gap: 6px; padding: 18px 0; border-top: 1px solid #23415F; align-items: baseline; } .ds-clause-no { font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 0.78rem; color: #6FA6C8; font-variant-numeric: tabular-nums; } .ds-clause-name { font-family: Archivo, system-ui, sans-serif; font-weight: 600; font-size: 0.98rem; letter-spacing: 0.03em; text-transform: uppercase; color: #EEF2F6; } .ds-clause-status { grid-column: 3; grid-row: 1; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 0.72rem; font-weight: 500; letter-spacing: 0.14em; color: #F26E4C; } .ds-clause-detail { grid-column: 2 / 4; font-size: 0.92rem; color: #A6C1D8; line-height: 1.6; max-width: 62ch; font-family: 'Public Sans', system-ui, sans-serif; } @media (max-width: 720px) { .ds-clause { grid-template-columns: 1.9rem 1fr auto; column-gap: 12px; } }"
+    },
+    {
+      "name": "Register Entry",
+      "kind": "card",
+      "refersTo": null,
+      "description": "A numbered catalogue record of a shipped product. Not boxed — separated by space and hairline only.",
+      "html": "<div class=\"ds-entry\"><h3 class=\"ds-entry-h\"><span class=\"ds-ord\">001</span>FreqCraft</h3><p class=\"ds-entry-meta\">Android &nbsp;&middot;&nbsp; v1.1.0 &nbsp;&middot;&nbsp; Flutter/Dart &nbsp;&middot;&nbsp; live on Google Play</p><p class=\"ds-entry-p\">A precision binaural and isochronic tone generator. Every Hz value visible, every parameter editable.</p><div class=\"ds-entry-links\"><a class=\"ds-link\" href=\"#\">Google Play &rarr;</a><a class=\"ds-link\" href=\"#\">freqcraft.app &rarr;</a></div></div>",
+      "css": ".ds-entry { padding: 6px 0 4px; } .ds-entry-h { font-family: Archivo, system-ui, sans-serif; font-size: clamp(1.45rem, 3.4vw, 1.9rem); font-weight: 700; letter-spacing: -0.015em; color: #EEF2F6; margin: 0 0 10px; display: flex; align-items: baseline; gap: 14px; } .ds-ord { font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 0.7rem; font-weight: 500; letter-spacing: 0.1em; color: #6FA6C8; transform: translateY(-0.15em); } .ds-entry-meta { font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 0.74rem; color: #A6C1D8; line-height: 1.7; margin: 0 0 16px; } .ds-entry-p { max-width: 58ch; color: #A6C1D8; margin: 0 0 16px; font-family: 'Public Sans', system-ui, sans-serif; line-height: 1.62; } .ds-entry-links { display: flex; flex-wrap: wrap; gap: 8px 22px; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 0.8rem; }"
+    },
+    {
+      "name": "Release Stamp",
+      "kind": "custom",
+      "refersTo": "release-stamp",
+      "description": "The single dramatic object — a rubber-stamped ship decision. Stamps in on scroll into view; static under reduced motion.",
+      "html": "<div class=\"ds-gatemark\"><div class=\"ds-stamp\" role=\"img\" aria-label=\"Current status: pass\">PASS</div><p class=\"ds-cap\"><b>FreqCraft 1.1.0</b>211 / 211 automated &middot; 22 manual procedures &middot; 2 devices &middot; 2026</p></div>",
+      "css": ".ds-gatemark { display: flex; align-items: center; gap: clamp(18px, 4vw, 40px); flex-wrap: wrap; } .ds-stamp { --deg: -3.5deg; font-family: Archivo, system-ui, sans-serif; font-weight: 800; font-size: clamp(2.6rem, 8vw, 4rem); letter-spacing: 0.06em; color: #F26E4C; border: 3px solid #F26E4C; padding: 8px 28px 10px; transform: rotate(var(--deg)); position: relative; line-height: 1; text-shadow: 0 0 1px color-mix(in srgb, #F26E4C 40%, transparent); animation: ds-stamp-in 560ms cubic-bezier(0.16, 1, 0.3, 1) both; } .ds-stamp::after { content: ''; position: absolute; inset: 3px; border: 1px solid color-mix(in srgb, #F26E4C 45%, transparent); pointer-events: none; } .ds-cap { font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 0.76rem; line-height: 1.7; color: #A6C1D8; } .ds-cap b { color: #EEF2F6; font-weight: 500; display: block; } @keyframes ds-stamp-in { 0% { opacity: 0; transform: rotate(-7deg) scale(1.22); } 55% { opacity: 1; } 100% { opacity: 1; transform: rotate(-3.5deg) scale(1); } } @media (prefers-reduced-motion: reduce) { .ds-stamp { animation: none; } }"
+    },
+    {
+      "name": "Masthead Titleblock Field",
+      "kind": "nav",
+      "refersTo": null,
+      "description": "Title-block control field — Doc / Sheet / Rev. Sits in the masthead grid under a 2px cyan rule.",
+      "html": "<header class=\"ds-header\"><div class=\"ds-titleblock\"><a class=\"ds-wordmark\" href=\"/\"><svg width=\"22\" height=\"24\" viewBox=\"0 0 22 24\" fill=\"none\" aria-hidden=\"true\"><polygon points=\"11,1.5 20.5,10 11,22.5 1.5,10\" stroke=\"#6FA6C8\" stroke-width=\"1.25\" fill=\"none\" stroke-linejoin=\"round\"/><path d=\"M11 5.5 V14.5 M6.5 10 H15.5\" stroke=\"#6FA6C8\" stroke-width=\"1\" stroke-linecap=\"round\" opacity=\"0.65\"/><circle cx=\"11\" cy=\"10\" r=\"1.15\" fill=\"#EEF2F6\"/></svg><b>DirectiveCraft</b></a><div class=\"ds-tb-field\"><span class=\"ds-tb-k\">Doc</span><span class=\"ds-tb-v\">DC-000</span></div><div class=\"ds-tb-field\"><span class=\"ds-tb-k\">Rev</span><span class=\"ds-tb-v\">2026-09-05</span></div></div></header>",
+      "css": ".ds-header { border-bottom: 2px solid #6FA6C8; } .ds-titleblock { display: grid; grid-template-columns: 1fr auto auto; align-items: stretch; } .ds-titleblock > * { display: flex; align-items: center; padding: 15px 0; } .ds-titleblock > * + * { border-left: 1px solid #23415F; padding-left: 20px; margin-left: 20px; } .ds-wordmark { display: flex; align-items: center; gap: 11px; text-decoration: none; color: #EEF2F6; } .ds-wordmark b { font-family: Archivo, system-ui, sans-serif; font-size: 1.06rem; font-weight: 700; letter-spacing: 0.01em; } .ds-tb-field { flex-direction: column; align-items: flex-start; gap: 2px; } .ds-tb-k { font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: #6FA6C8; } .ds-tb-v { font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 0.8rem; color: #A6C1D8; white-space: nowrap; } @media (max-width: 720px) { .ds-titleblock { grid-template-columns: 1fr; gap: 2px; } .ds-titleblock > * + * { border-left: 0; padding-left: 0; margin-left: 0; } .ds-tb-field { flex-direction: row; gap: 7px; align-items: baseline; } }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Controlled Document",
+    "overview": "The homepage is the artifact a studio issues when a claim must be checkable: a diazo blueprint crossed with a QA release sheet, not a landing page. One saturated diazo-blue ink owns the entire surface edge to edge. Structure is drawn, not decorated: a single fixed 1px drafting-sheet frame inset from the viewport, a centred 48rem sheet whose left and right edges are carried as hairlines through header, main, and footer, and groups divided by whitespace and single hairline rules. Nothing is boxed, nothing is carded, nothing floats.\n\nType does the ranking. A heavy Archivo display voice states the studio's one sentence left-aligned; Public Sans carries the prose at a generous reading measure; JetBrains Mono, tabular, carries every number, label, ordinal, and revision line so that data always reads as instrument output. The lone warm accent, a diazo-print orange, is rationed to things that are live or actionable and on a full screen touches well under a tenth of the surface.\n\nThis world explicitly refuses the centered dark hero with three principle cards and one glowing CTA. It refuses gradients, glass, glow, drop shadows, rounded corners, and any decorative imagery. Depth is tonal only: the recessed readout band is a half-step darker than the ground.",
+    "keyCharacteristics": [
+      "One diazo-blue ground, edge to edge; no second surface colour, only a darker sunk band.",
+      "Drawn structure: fixed sheet frame, hairline rules, carried sheet edges — never boxes.",
+      "Mono for every number, label, and ordinal; data reads as instrument output.",
+      "Accent rationed to live/actionable elements only.",
+      "One authored motion moment (the PASS stamp); everything else static and JS-optional."
+    ],
+    "rules": [
+      { "name": "The Live-Only Accent Rule", "body": "#F26E4C marks things that are live, passing, or clickable — nothing else. If an element is not a link, a pass status, or the release stamp, it is chalk, dim chalk, or cyan. On any given screen the accent covers under 10% of the surface; the rarity is the signal.", "section": "colors" },
+      { "name": "The Blue-Tinted Neutral Rule", "body": "There is no gray in this system. Every neutral is a blue. Secondary text is #A6C1D8, not a desaturated gray.", "section": "colors" },
+      { "name": "The Mono-For-Number Rule", "body": "Every numeral a visitor might check — test counts, versions, device counts, dates, ordinals, revision lines — is set in JetBrains Mono with tabular-nums. Numbers never appear in the display or body face.", "section": "typography" },
+      { "name": "The Left-Aligned Statement Rule", "body": "The H1 is left-aligned and capped at 19ch. It is never centred and never full-measure.", "section": "typography" },
+      { "name": "The Drawn-Not-Lifted Rule", "body": "Structure is expressed with 1px rules and a fixed frame, never with elevation. If a region needs to feel distinct, it gets a hairline border or the sunk-band tint — never a shadow, never a radius.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do keep one blue ground edge to edge; if a region must recede, use var(--ink-sunk) (#10283F) and hairline brackets, nothing else.",
+      "Do set every checkable numeral in JetBrains Mono with tabular-nums — counts, versions, dates, ordinals, revision lines.",
+      "Do ration #F26E4C to live/actionable elements only: links, the primary action, PASS status, the release stamp. Keep it under 10% of any screen.",
+      "Do carry the sheet's left (var(--rule)) and right (var(--rule-soft)) edges on every top-level region — header, main, footer — so the 48rem sheet reads as continuous.",
+      "Do divide groups with whitespace and a single 1px rule; use the 2px cyan rule only for the masthead and footer seams.",
+      "Do keep prose within its measure: 44rem .col, ~54-62ch per block.",
+      "Do left-align the display H1 and cap it at 19ch.",
+      "Do let one authored motion moment (the PASS stamp) carry all the drama; everything else gets link/arrow micro-transitions at most, and must render fully without JS and be static under prefers-reduced-motion."
+    ],
+    "donts": [
+      "Don't box, card, fill, or shadow a content group. No box-shadow anywhere; depth is the one sunk band only.",
+      "Don't add corner radius to structural elements. Rectilinear, hard-edged; radius 0 except the 1px focus-outline softening.",
+      "Don't put a number in the Archivo or Public Sans face, or introduce a gray — every neutral is a blue.",
+      "Don't use the accent on the logo mark, ordinals, headings, or structure. The mark and ordinals are cyan.",
+      "Don't centre the H1 or build a centered dark hero with principle cards and a glowing CTA — that is the explicit anti-reference.",
+      "Don't add gradients, glass, glow, drop shadows, or decorative imagery.",
+      "Don't introduce a second button style; the primary action is a mono underline, and there is no secondary/ghost variant."
+    ]
+  }
+}
