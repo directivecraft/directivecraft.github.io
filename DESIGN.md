@@ -274,7 +274,44 @@ The logo mark is a thin-stroke diamond (cyan, 1.25px) with an interior crosshair
 
 ## Scope
 
-This document describes the homepage world only (`index.html`). `/testing/` and
-`/privacy/` remain on the prior design (Space Grotesk / Inter, incumbent amber
-`#FFB300` accent) pending a follow-up pass; their faces are still declared in
-`assets/fonts.css` but are not part of this system.
+This system now governs all three built pages: `index.html`, `/testing/` (the
+FreqCraft QA SOP), and `/privacy/`. The Space Grotesk and Inter `@font-face`
+blocks remain in `assets/fonts.css` only as dead declarations (no page references
+them) and can be removed once nothing else depends on them.
+
+### Extension pages — `/testing/` and `/privacy/`
+
+Both inherit the homepage tokens, masthead, sheet, footer, and readout band
+unchanged. Page-specific components and one sanctioned adaptation:
+
+- **Titleblock `Doc` values** are suffixed per sheet: `DC-000` (home),
+  `DC-000-T` (testing), `DC-000-P` (privacy). The third field is `Home / ← Back`
+  instead of `Rev`.
+- **`/privacy/` fact readout** is the readout band at `repeat(3, 1fr)` (six
+  boolean facts: Cookies/None … Account required/No). Values are chalk mono, not
+  accent — "None" is a state, not an action.
+- **`/testing/` procedure readout** is the readout band at `repeat(5, 1fr)`
+  (211 / 22 / 02 / Sev / Written).
+- **Phase divider (`.phase`)** — a `2px var(--cyan)` top rule (the same weight as
+  the masthead/footer seam) with an Archivo 700 `clamp(1.2rem,3vw,1.6rem)` name.
+  Marks the SOP's major parts (Automated coverage, Phase A, Phase B).
+- **Test register (`.test`)** — the clause-register pattern extended: a bordered
+  mono `.test-id` chip + Archivo `.test-title` on one row, then `.test-purpose`,
+  a `.steps` checklist (1px cyan square markers via `::before`), and one or more
+  `.result` lines. Hairline top border between tests, never boxed.
+- **`.result` accent adaptation** — on the homepage the `PASS` status is the
+  accent because it is rare. On `/testing/` a pass is the norm across ~20 tests,
+  so **`.result` (pass) is neutral**: a 1px cyan left rule and a cyan mono label.
+  **`.result.fail` / `.result` blockers take the signal** (1px signal left rule,
+  signal label) because a failure is the one actionable thing on the page;
+  **`.result.note`** uses a `var(--rule)` rule and dim label. This keeps the
+  Live-Only Accent Rule intact — signal still marks "look here / act".
+- **`.envbox`** — a mono config block on `var(--ink-sunk)`, 1px `--rule-soft`
+  border with a 2px `--rule` left edge, `overflow-x: auto`.
+- **`.gaps` table** — a real data table: cyan uppercase mono `th` on
+  `var(--ink-sunk)`, 1px `--rule-soft` cell borders, wrapped in
+  `.gaps-wrap { overflow-x: auto }` so it scrolls inside the sheet on mobile.
+- **`.version-log`** — mono change-log block, same surface treatment as `.envbox`.
+- No canvas, no background animation, no scroll-triggered motion on these two
+  pages; the only JS is the runtime email assembly (with a `<noscript>` address
+  fallback on `/testing/`).

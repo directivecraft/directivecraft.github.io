@@ -14,788 +14,758 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --black:      #0A0A0F;
-      --panel:      #13131F;
-      --panel-2:    #0F0F18;
-      --border:     #1E1E32;
-      --amber:      #FFB300;
-      --amber-dim:  #FFB30028;
-      --amber-mid:  #FFB30055;
-      --text:       #E8E8F0;
-      --muted:      #7A7A9A;
-      --subtle:     #3A3A5A;
-      --red:        #E0705E;
-      --green:      #6FCF8E;
+      --ink:        #14304C;
+      --ink-sunk:   #10283F;
+      --rule:       #2E5175;
+      --rule-soft:  #23415F;
+      --chalk:      #EEF2F6;
+      --chalk-dim:  #A6C1D8;
+      --cyan:       #6FA6C8;
+      --signal:     #F26E4C;
+
+      --display: 'Archivo', system-ui, 'Segoe UI', Roboto, sans-serif;
+      --body:    'Public Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+      --mono:    'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+
+      --col: 44rem;
+      --wide: 48rem;
+      --pad: clamp(20px, 5vw, 40px);
     }
 
-    html { scroll-behavior: smooth; }
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 
     body {
-      background: var(--black);
-      color: var(--text);
-      font-family: 'Inter', sans-serif;
+      background-color: var(--ink);
+      color: var(--chalk);
+      font-family: var(--body);
       font-size: 16px;
-      line-height: 1.6;
+      line-height: 1.62;
       min-height: 100vh;
-      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
     }
 
-    #bgCanvas {
+    body::before {
+      content: "";
       position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
+      inset: 9px;
+      border: 1px solid var(--rule-soft);
       pointer-events: none;
-      z-index: 0;
-      opacity: 0.06;
+      z-index: 5;
     }
+    @media (max-width: 720px) { body::before { inset: 5px; } }
 
-    .wrapper {
-      position: relative;
-      z-index: 1;
-      max-width: 860px;
+    ::selection { background: var(--signal); color: #1A1A1A; }
+    :focus-visible { outline: 2px solid var(--signal); outline-offset: 3px; border-radius: 1px; }
+    * { scrollbar-color: var(--rule) transparent; }
+    ::-webkit-scrollbar { width: 12px; height: 12px; }
+    ::-webkit-scrollbar-track { background: var(--ink-sunk); }
+    ::-webkit-scrollbar-thumb { background: var(--rule); border: 3px solid var(--ink-sunk); }
+
+    main {
+      max-width: var(--wide);
       margin: 0 auto;
-      padding: 0 24px 64px;
+      border-left: 1px solid var(--rule);
+      border-right: 1px solid var(--rule-soft);
     }
+    .sheet { padding: 0 var(--pad); }
+    .col { max-width: var(--col); }
 
-    /* ── NAV ── */
-    nav {
-      padding: 24px 0 0;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+    a {
+      color: var(--signal);
+      text-decoration: underline;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 0.18em;
+      text-decoration-color: color-mix(in srgb, var(--signal) 55%, transparent);
+      transition: text-decoration-color 0.15s ease;
     }
-    .logo { display: flex; align-items: center; gap: 11px; text-decoration: none; }
-    .wordmark {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 1.15rem; font-weight: 700;
-      letter-spacing: -0.02em; color: var(--text);
-    }
-    .wordmark span { color: var(--amber); }
-    .back-link {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 0.75rem; font-weight: 500;
-      letter-spacing: 0.08em; text-transform: uppercase;
-      color: var(--muted); text-decoration: none;
-      border: 1px solid var(--border);
-      padding: 5px 12px; border-radius: 2px;
-      transition: color 0.2s, border-color 0.2s;
-    }
-    .back-link:hover { color: var(--amber); border-color: var(--amber-mid); }
+    a:hover { text-decoration-color: var(--signal); }
 
-    /* ── PAGE HEADER ── */
-    .page-header { padding: 48px 0 28px; }
-    .eyebrow {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 0.7rem; font-weight: 500;
-      letter-spacing: 0.2em; text-transform: uppercase;
-      color: var(--amber); margin-bottom: 14px;
+    code {
+      font-family: var(--mono);
+      font-size: 0.86em;
+      color: var(--chalk);
+      background: var(--ink-sunk);
+      border: 1px solid var(--rule-soft);
+      padding: 1px 5px;
+      word-break: break-word;
     }
+    em { font-style: italic; color: var(--chalk); }
+
+    /* ── MASTHEAD ─────────────────────────────────────── */
+    header {
+      border-bottom: 2px solid var(--cyan);
+      max-width: var(--wide);
+      margin: 0 auto;
+      border-left: 1px solid var(--rule);
+      border-right: 1px solid var(--rule-soft);
+    }
+    .titleblock {
+      padding: 0 var(--pad);
+      display: grid;
+      grid-template-columns: 1fr auto auto auto;
+      align-items: stretch;
+    }
+    .titleblock > * { display: flex; align-items: center; padding: 15px 0; }
+    .titleblock > * + * {
+      border-left: 1px solid var(--rule-soft);
+      padding-left: 20px;
+      margin-left: 20px;
+    }
+    .wordmark { display: flex; align-items: center; gap: 11px; text-decoration: none; color: var(--chalk); }
+    .wordmark:hover { text-decoration: none; }
+    .wordmark svg { display: block; flex: none; }
+    .wordmark b { font-family: var(--display); font-size: 1.06rem; font-weight: 700; letter-spacing: 0.01em; }
+    .tb-field { flex-direction: column; align-items: flex-start; gap: 2px; }
+    .tb-field .k { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--cyan); }
+    .tb-field .v { font-family: var(--mono); font-size: 0.8rem; color: var(--chalk-dim); white-space: nowrap; }
+    .tb-field .v a { color: var(--chalk-dim); text-decoration-color: color-mix(in srgb, var(--chalk-dim) 45%, transparent); }
+    .tb-field .v a:hover { color: var(--signal); text-decoration-color: var(--signal); }
+
+    /* ── PAGE HEAD ────────────────────────────────────── */
+    .page-head { padding: clamp(40px, 6vw, 64px) 0 clamp(28px, 4vw, 40px); }
     h1 {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: clamp(1.8rem, 4.5vw, 2.8rem);
-      font-weight: 700; line-height: 1.12;
-      letter-spacing: -0.03em; color: var(--text);
+      font-family: var(--display);
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 700;
+      line-height: 1.07;
+      letter-spacing: -0.021em;
+      color: var(--chalk);
+      max-width: 18ch;
+      margin-bottom: 22px;
+      text-wrap: balance;
+    }
+    .lede { font-size: 1.06rem; line-height: 1.66; color: var(--chalk-dim); max-width: 60ch; }
+    .lede strong { color: var(--chalk); font-weight: 500; }
+
+    /* ── SECTIONS ─────────────────────────────────────── */
+    section.block { padding: clamp(34px, 4.5vw, 48px) 0; }
+    .block + .block { border-top: 1px solid var(--rule-soft); }
+    h2 {
+      font-family: var(--display);
+      font-size: clamp(1.02rem, 2vw, 1.2rem);
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--chalk);
       margin-bottom: 18px;
     }
-    .lede {
-      font-size: 1rem; font-weight: 300;
-      color: var(--muted); max-width: 640px; line-height: 1.75;
-    }
-    .lede strong { color: var(--text); font-weight: 400; }
+    .prose { color: var(--chalk-dim); max-width: 62ch; }
+    .prose p + p { margin-top: 12px; }
+    .prose strong { color: var(--chalk); font-weight: 500; }
+    .case-block + .case-block { margin-top: 26px; }
 
-    /* ── CASE BLOCKS ── */
-    .case {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1px;
-      background: var(--border);
-      border: 1px solid var(--border);
-      margin: 36px 0 28px;
+    /* ── READOUT ──────────────────────────────────────── */
+    .readout { background: var(--ink-sunk); border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+    .readout-inner { padding: 4px var(--pad); display: grid; grid-template-columns: repeat(5, 1fr); }
+    .cell { padding: 18px 16px 16px; border-left: 1px solid var(--rule-soft); }
+    .cell:first-child { border-left: 0; padding-left: 0; }
+    .cell .k {
+      font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.04em;
+      text-transform: uppercase; color: var(--cyan); display: block; margin-bottom: 9px; line-height: 1.4;
     }
-    .case-cell { background: var(--panel); padding: 24px 24px; }
-    .case-cell h2 {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 0.63rem; font-weight: 600;
-      letter-spacing: 0.18em; text-transform: uppercase;
-      color: var(--amber); margin-bottom: 12px;
-    }
-    .case-cell p { font-size: 0.9rem; color: var(--muted); line-height: 1.7; }
-    .case-cell p + p { margin-top: 10px; }
-    .case-cell p strong { color: var(--text); font-weight: 500; }
-    @media (max-width: 640px) { .case { grid-template-columns: 1fr; } }
-
-    /* ── META STRIP ── */
-    .meta-strip {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 1px; background: var(--border);
-      border: 1px solid var(--border); margin-bottom: 8px;
-    }
-    .meta-cell { background: var(--panel); padding: 16px 14px; }
-    .meta-val {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 1.15rem; font-weight: 700;
-      color: var(--amber); line-height: 1; margin-bottom: 5px;
-    }
-    .meta-key {
-      font-size: 0.6rem; color: var(--muted);
-      letter-spacing: 0.06em; text-transform: uppercase; line-height: 1.4;
-    }
-    @media (max-width: 640px) { .meta-strip { grid-template-columns: repeat(2, 1fr); } }
-
-    .sanitize-note {
-      font-size: 0.74rem; color: var(--subtle);
-      line-height: 1.6; margin: 14px 0 4px; font-style: italic;
+    .cell .v { font-family: var(--mono); font-size: clamp(1.1rem, 3vw, 1.5rem); font-weight: 500; color: var(--chalk); font-variant-numeric: tabular-nums; }
+    .readout-note {
+      margin: 0 var(--pad); padding: 13px 0 16px; border-top: 1px solid var(--rule-soft);
+      font-size: 0.82rem; line-height: 1.55; color: var(--chalk-dim); max-width: 66ch;
     }
 
-    /* ── DIVIDER ── */
-    .divider { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
+    /* ── SOP DOC HEADER ───────────────────────────────── */
+    .doc-head { padding: clamp(30px, 4vw, 44px) 0 clamp(24px, 3vw, 34px); border-top: 2px solid var(--cyan); }
+    .doc-title { font-family: var(--display); font-weight: 700; font-size: 1.35rem; color: var(--chalk); letter-spacing: -0.015em; margin-bottom: 10px; }
+    .doc-meta { font-family: var(--mono); font-size: 0.76rem; color: var(--chalk-dim); line-height: 1.9; }
+    .doc-purpose { margin-top: 18px; color: var(--chalk-dim); max-width: 64ch; }
+    .doc-purpose p + p { margin-top: 12px; }
+    .doc-purpose strong { color: var(--chalk); font-weight: 500; }
 
-    /* ── DOCUMENT ── */
-    .doc-title {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 1.3rem; font-weight: 700;
-      color: var(--text); letter-spacing: -0.02em; margin-bottom: 6px;
-    }
-    .doc-meta {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.74rem; color: var(--subtle);
-      line-height: 1.8; margin-bottom: 8px;
-    }
+    /* ── PHASE DIVIDER ────────────────────────────────── */
+    .phase { padding-top: clamp(36px, 5vw, 52px); border-top: 2px solid var(--cyan); margin-top: clamp(30px, 4vw, 44px); }
+    .phase-name { font-family: var(--display); font-weight: 700; font-size: clamp(1.2rem, 3vw, 1.6rem); letter-spacing: -0.01em; color: var(--chalk); margin-bottom: 14px; }
+    .phase-sub { color: var(--chalk-dim); max-width: 64ch; line-height: 1.66; }
+    .phase-sub strong { color: var(--chalk); font-weight: 500; }
+    .phase-sub + .phase-sub, .phase-sub br + br { }
 
-    .phase-banner {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 0.95rem; font-weight: 700;
-      letter-spacing: 0.06em; text-transform: uppercase;
-      color: var(--black); background: var(--amber);
-      padding: 12px 18px; margin: 40px 0 8px; border-radius: 2px;
-    }
-    .phase-sub {
-      font-size: 0.84rem; color: var(--muted);
-      margin-bottom: 22px; line-height: 1.7;
-    }
-    .phase-sub strong { color: var(--text); font-weight: 500; }
-
-    /* env box */
     .envbox {
-      background: var(--panel-2); border: 1px solid var(--border);
-      border-left: 2px solid var(--amber-mid);
-      padding: 16px 18px; margin-bottom: 24px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.78rem; color: var(--muted); line-height: 1.9;
+      background: var(--ink-sunk);
+      border: 1px solid var(--rule-soft);
+      border-left: 2px solid var(--rule);
+      padding: 16px 18px;
+      margin: 22px 0 8px;
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      color: var(--chalk-dim);
+      line-height: 1.95;
+      overflow-x: auto;
     }
-    .envbox b { color: var(--text); font-weight: 500; }
+    .envbox b { color: var(--chalk); font-weight: 500; }
 
-    /* test card */
-    .test {
-      background: var(--panel); border: 1px solid var(--border);
-      padding: 20px 22px; margin-bottom: 16px; border-radius: 2px;
-    }
-    .test-head {
-      display: flex; align-items: baseline; gap: 12px;
-      flex-wrap: wrap; margin-bottom: 6px;
-    }
+    /* ── TEST REGISTER ────────────────────────────────── */
+    .test { padding: 22px 0; border-top: 1px solid var(--rule-soft); }
+    .test:first-of-type { border-top: 0; }
+    .test-head { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; margin-bottom: 8px; }
     .test-id {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.8rem; font-weight: 500; color: var(--amber);
-      border: 1px solid var(--amber-mid); padding: 2px 8px; border-radius: 2px;
+      font-family: var(--mono); font-size: 0.76rem; font-weight: 500; letter-spacing: 0.06em;
+      color: var(--cyan); border: 1px solid var(--rule); padding: 2px 8px;
     }
-    .test-title {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 0.98rem; font-weight: 600; color: var(--text);
-    }
-    .test-purpose {
-      font-size: 0.84rem; color: var(--muted);
-      line-height: 1.65; margin-bottom: 14px;
-    }
-    .steps { list-style: none; }
+    .test-title { font-family: var(--display); font-size: 1rem; font-weight: 700; color: var(--chalk); }
+    .test-purpose { color: var(--chalk-dim); font-size: 0.92rem; line-height: 1.6; margin-bottom: 14px; max-width: 64ch; }
+
+    .steps { list-style: none; margin: 0 0 4px; }
     .steps li {
-      position: relative; padding-left: 24px;
-      font-size: 0.86rem; color: var(--text);
-      line-height: 1.6; margin-bottom: 9px;
+      position: relative; padding-left: 26px; font-size: 0.9rem; color: var(--chalk);
+      line-height: 1.6; margin-bottom: 9px; max-width: 66ch;
     }
     .steps li::before {
-      content: ""; position: absolute; left: 0; top: 4px;
-      width: 12px; height: 12px;
-      border: 1.5px solid var(--subtle); border-radius: 2px;
+      content: ""; position: absolute; left: 0; top: 5px;
+      width: 12px; height: 12px; border: 1px solid var(--cyan);
     }
-    .steps li b { color: var(--amber); font-weight: 500; font-family: 'Space Grotesk', sans-serif; font-size: 0.78rem; letter-spacing: 0.04em; }
-    code {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.8rem; color: var(--text);
-      background: var(--panel-2); padding: 1px 6px;
-      border-radius: 2px; border: 1px solid var(--border);
+    .steps li b {
+      color: var(--cyan); font-family: var(--mono); font-weight: 500;
+      font-size: 0.76rem; letter-spacing: 0.04em; text-transform: uppercase;
+      margin-right: 6px;
     }
+    .steps li b::after { content: ":"; }
 
     .result {
-      margin-top: 14px; padding: 11px 16px;
-      border-left: 2px solid var(--green);
-      background: var(--panel-2); font-size: 0.83rem;
-      color: var(--muted); line-height: 1.6;
+      margin-top: 14px; padding: 10px 0 10px 16px;
+      border-left: 1px solid var(--cyan);
+      font-size: 0.86rem; color: var(--chalk-dim); line-height: 1.6; max-width: 66ch;
     }
-    .result.fail { border-left-color: var(--red); }
-    .result.note { border-left-color: var(--amber); }
-    .result b { font-family: 'Space Grotesk', sans-serif; font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; }
-    .result.pass b { color: var(--green); }
-    .result.fail b { color: var(--red); }
-    .result.note b { color: var(--amber); }
+    .result b {
+      font-family: var(--mono); font-size: 0.72rem; font-weight: 500;
+      letter-spacing: 0.1em; text-transform: uppercase; color: var(--cyan);
+      margin-right: 8px;
+    }
+    .result b::after { content: ":"; }
+    .result.fail { border-left-color: var(--signal); }
+    .result.fail b { color: var(--signal); }
+    .result.note { border-left-color: var(--rule); }
+    .result.note b { color: var(--chalk-dim); }
 
-    /* gate / list boxes */
-    .gate {
-      background: var(--panel); border: 1px solid var(--amber-mid);
-      padding: 22px 24px; margin-bottom: 20px; border-radius: 2px;
-    }
+    /* ── GATE ─────────────────────────────────────────── */
+    .gate { margin-top: 30px; padding: 24px 0 4px; border-top: 1px solid var(--rule); }
     .gate h3 {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 0.8rem; font-weight: 600;
-      letter-spacing: 0.1em; text-transform: uppercase;
-      color: var(--amber); margin-bottom: 14px;
+      font-family: var(--display); font-size: 0.9rem; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase; color: var(--chalk); margin-bottom: 12px;
     }
-    .gate .steps li { color: var(--muted); }
+    .gate > p { font-size: 0.86rem; color: var(--chalk-dim); margin-bottom: 14px; line-height: 1.6; }
+    .gate .steps li { color: var(--chalk-dim); }
+    .gate-status {
+      font-family: var(--mono); font-size: 0.78rem; color: var(--cyan);
+      letter-spacing: 0.04em; margin-top: 16px;
+    }
 
-    /* table */
-    .gaps { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 0.82rem; }
-    .gaps th, .gaps td {
-      text-align: left; padding: 10px 12px;
-      border: 1px solid var(--border); vertical-align: top;
-    }
+    /* ── GAPS TABLE ───────────────────────────────────── */
+    .gaps-wrap { overflow-x: auto; margin-bottom: 4px; }
+    table.gaps { width: 100%; border-collapse: collapse; font-size: 0.84rem; min-width: 520px; }
+    .gaps th, .gaps td { text-align: left; padding: 11px 12px; border: 1px solid var(--rule-soft); vertical-align: top; }
     .gaps th {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 0.66rem; letter-spacing: 0.1em;
-      text-transform: uppercase; color: var(--amber);
-      background: var(--panel);
+      font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.06em;
+      text-transform: uppercase; color: var(--cyan); background: var(--ink-sunk); font-weight: 500;
     }
-    .gaps td { color: var(--muted); background: var(--panel-2); }
-    .gaps td:first-child { font-family: 'JetBrains Mono', monospace; color: var(--text); white-space: nowrap; }
+    .gaps td { color: var(--chalk-dim); }
+    .gaps td:first-child { font-family: var(--mono); color: var(--chalk); white-space: nowrap; }
 
     .version-log {
-      background: var(--panel-2); border: 1px solid var(--border);
-      padding: 18px 20px; border-radius: 2px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.78rem; color: var(--muted); line-height: 1.8;
+      background: var(--ink-sunk); border: 1px solid var(--rule-soft);
+      padding: 18px 20px; margin-top: 8px;
+      font-family: var(--mono); font-size: 0.76rem; color: var(--chalk-dim); line-height: 1.95;
+      overflow-x: auto;
     }
-    .version-log b { color: var(--amber); font-weight: 500; }
+    .version-log b { color: var(--cyan); font-weight: 500; }
+    .version-log i { color: var(--chalk); font-style: italic; }
 
-    /* CTA */
-    .cta-block {
-      border: 1px solid var(--border); background: var(--panel);
-      padding: 28px; margin: 40px 0 0;
-      display: flex; align-items: center; justify-content: space-between;
-      flex-wrap: wrap; gap: 20px;
+    /* ── CTA ──────────────────────────────────────────── */
+    .cta { padding: clamp(36px, 5vw, 52px) 0; border-top: 2px solid var(--cyan); }
+    .cta h2 { margin-bottom: 12px; }
+    .cta p { color: var(--chalk-dim); max-width: 56ch; margin-bottom: 20px; }
+    .act {
+      font-family: var(--mono); font-size: 0.9rem; font-weight: 500; letter-spacing: 0.02em;
+      color: var(--signal); text-decoration: none; border-bottom: 1px solid var(--signal);
+      padding-bottom: 3px; display: inline-block;
     }
-    .cta-block h2 {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 1.05rem; font-weight: 600;
-      color: var(--text); margin-bottom: 6px; letter-spacing: -0.01em;
-    }
-    .cta-block p { font-size: 0.84rem; color: var(--muted); max-width: 420px; line-height: 1.6; }
-    .btn-primary {
-      background: var(--amber); color: var(--black);
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 0.82rem; font-weight: 700;
-      letter-spacing: 0.07em; text-transform: uppercase;
-      text-decoration: none; padding: 12px 24px;
-      border-radius: 2px; white-space: nowrap;
-      transition: opacity 0.2s;
-    }
-    .btn-primary:hover { opacity: 0.85; }
+    .act:hover { text-decoration: none; border-bottom-width: 2px; padding-bottom: 2px; }
+    .act .arr { display: inline-block; transition: transform 0.16s ease; }
+    .act:hover .arr { transform: translateX(4px); }
 
-    /* footer */
+    /* ── FOOTER ───────────────────────────────────────── */
     footer {
-      border-top: 1px solid var(--border);
-      padding: 24px 0 0; margin-top: 40px;
-      display: flex; align-items: flex-start;
-      justify-content: space-between; flex-wrap: wrap; gap: 12px;
+      border-top: 2px solid var(--cyan);
+      padding: 26px 0 clamp(32px, 6vw, 52px);
+      max-width: var(--wide);
+      margin: 0 auto;
+      border-left: 1px solid var(--rule);
+      border-right: 1px solid var(--rule-soft);
     }
-    .footer-mark {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 0.82rem; font-weight: 600; color: var(--subtle);
-    }
-    .footer-mark span { color: var(--amber); }
-    .footer-links { display: flex; gap: 20px; }
-    .footer-links a {
-      font-size: 0.73rem; color: var(--subtle);
-      text-decoration: none; letter-spacing: 0.04em; transition: color 0.2s;
-    }
-    .footer-links a:hover { color: var(--amber); }
+    .foot-top { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 14px 30px; margin-bottom: 20px; }
+    .foot-mark { font-family: var(--display); font-weight: 700; font-size: 0.92rem; letter-spacing: 0.02em; color: var(--chalk-dim); }
+    .foot-links { display: flex; flex-wrap: wrap; gap: 8px 24px; font-family: var(--mono); font-size: 0.78rem; }
+    .foot-rev { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.03em; color: var(--cyan); border-top: 1px solid var(--rule-soft); padding-top: 16px; max-width: 60ch; }
+    .ns-mail { font-family: var(--mono); font-size: 0.82rem; color: var(--chalk); margin-top: 14px; }
 
-    @media (max-width: 600px) {
-      nav { flex-direction: column; align-items: flex-start; gap: 10px; }
-      .cta-block { flex-direction: column; align-items: flex-start; }
-      .footer-links { flex-wrap: wrap; }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .act .arr { transition: none; } }
+
+    @media (max-width: 720px) {
+      .titleblock { grid-template-columns: 1fr; gap: 2px; padding: 12px var(--pad) 13px; }
+      .titleblock > * { padding: 3px 0; }
+      .titleblock > .wordmark { padding-bottom: 11px; }
+      .titleblock > * + * { border-left: 0; padding-left: 0; margin-left: 0; }
+      .tb-field { flex-direction: row; gap: 7px; align-items: baseline; }
+      .tb-field .k { min-width: 3.4rem; }
+      .readout-inner { grid-template-columns: 1fr 1fr; }
+      .cell { padding: 15px 14px; border-left: 0; }
+      .cell:nth-child(odd) { padding-left: 0; }
+      .cell:nth-child(even) { border-left: 1px solid var(--rule-soft); }
+      .cell:nth-child(n+3) { border-top: 1px solid var(--rule-soft); }
+      .cell:nth-child(-n+2) { border-top: 0; }
     }
   </style>
 </head>
 <body>
 
-<canvas id="bgCanvas"></canvas>
-
-<div class="wrapper">
-
-  <!-- NAV -->
-  <nav>
-    <a class="logo" href="/">
-      <svg width="22" height="26" viewBox="0 0 22 26" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <polygon points="11,1 21,9 11,25 1,9" stroke="#FFB300" stroke-width="1.5" fill="none" stroke-linejoin="round"/>
-        <polygon points="11,6 16,10.5 11,20 6,10.5" stroke="#FFB300" stroke-width="0.75" fill="none" stroke-linejoin="round" opacity="0.4"/>
-        <circle cx="11" cy="13" r="1.2" fill="#FFB300" opacity="0.7"/>
-      </svg>
-      <div class="wordmark">Directive<span>Craft</span></div>
-    </a>
-    <a href="/" class="back-link">← Back</a>
-  </nav>
-
-  <!-- HEADER -->
-  <div class="page-header">
-    <p class="eyebrow">Engineering · Quality Assurance</p>
-    <h1>How FreqCraft is tested.</h1>
-    <p class="lede">
-      Before FreqCraft ships, it has to earn it. This is the actual release procedure the app is
-      held to — the one that answers a single question under pressure:
-      <strong>is this build safe to release?</strong> Reproduced in full below, sanitized only of
-      internal file paths. Nothing hidden — including what the tests caught.
-    </p>
-  </div>
-
-  <!-- CASE STUDY -->
-  <div class="case">
-    <div class="case-cell">
-      <h2>The Problem</h2>
-      <p>"It works on my machine" is not a release decision. A shipping app needs a <strong>repeatable, defensible answer</strong> to whether it's ready — one that survives a deadline, a tired developer, and a feature added last week.</p>
-      <p>Memory and good intentions don't scale. The process has to be written down, ordered, and gated.</p>
+  <header>
+    <div class="titleblock">
+      <a class="wordmark" href="/">
+        <svg width="22" height="24" viewBox="0 0 22 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <polygon points="11,1.5 20.5,10 11,22.5 1.5,10" stroke="#6FA6C8" stroke-width="1.25" fill="none" stroke-linejoin="round"/>
+          <path d="M11 5.5 V14.5 M6.5 10 H15.5" stroke="#6FA6C8" stroke-width="1" stroke-linecap="round" opacity="0.65"/>
+          <circle cx="11" cy="10" r="1.15" fill="#EEF2F6"/>
+        </svg>
+        <b>DirectiveCraft</b>
+      </a>
+      <div class="tb-field"><span class="k">Doc</span><span class="v">DC-000-T</span></div>
+      <div class="tb-field"><span class="k">Sheet</span><span class="v">FreqCraft QA SOP</span></div>
+      <div class="tb-field"><span class="k">Home</span><span class="v"><a href="/">&larr; Back</a></span></div>
     </div>
-    <div class="case-cell">
-      <h2>The Approach</h2>
-      <p>Two layers, narrowest net first: an <strong>automated adversarial test suite</strong>, then a <strong>physical-device pass</strong> that ends in a release gate. Every test has an explicit pass condition.</p>
-      <p>Known issues are triaged by severity and disclosed — not buried. The gate states, in writing, ship or don't ship.</p>
+  </header>
+
+  <main>
+    <section class="page-head">
+      <div class="sheet col">
+        <h1>How FreqCraft is tested.</h1>
+        <p class="lede">
+          Before FreqCraft ships, it has to earn it. This is the actual release procedure the
+          app is held to, the one that answers a single question under pressure:
+          <strong>is this build safe to release?</strong> Reproduced in full below, sanitized
+          only of internal file paths. Nothing hidden, including what the tests caught.
+        </p>
+      </div>
+    </section>
+
+    <section class="block">
+      <div class="sheet col">
+        <div class="case-block">
+          <h2>The problem</h2>
+          <div class="prose">
+            <p>&ldquo;It works on my machine&rdquo; is not a release decision. A shipping app needs a <strong>repeatable, defensible answer</strong> to whether it&rsquo;s ready, one that survives a deadline, a tired developer, and a feature added last week.</p>
+            <p>Memory and good intentions don&rsquo;t scale. The process has to be written down, ordered, and gated.</p>
+          </div>
+        </div>
+        <div class="case-block">
+          <h2>The approach</h2>
+          <div class="prose">
+            <p>Two layers, narrowest net first: an <strong>automated adversarial test suite</strong>, then a <strong>physical-device pass</strong> that ends in a release gate. Every test has an explicit pass condition.</p>
+            <p>Known issues are triaged by severity and disclosed, not buried. The gate states, in writing, ship or don&rsquo;t ship.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="readout" aria-label="Procedure at a glance">
+      <div class="readout-inner">
+        <div class="cell"><span class="k">Automated tests</span><span class="v">211</span></div>
+        <div class="cell"><span class="k">Manual procedures</span><span class="v">22</span></div>
+        <div class="cell"><span class="k">Physical devices</span><span class="v">02</span></div>
+        <div class="cell"><span class="k">Known issues</span><span class="v">Sev</span></div>
+        <div class="cell"><span class="k">Gate decision</span><span class="v">Written</span></div>
+      </div>
+      <p class="readout-note">211 automated tests and 22 manual procedures, run on two physical handsets. Counts verified against the source before publishing. The automated suite has already earned its keep twice: it caught a readout-overflow defect, and later a teardown race that four rounds of code review missed. Both are documented below.</p>
     </div>
-  </div>
 
-  <!-- META STRIP -->
-  <div class="meta-strip">
-    <div class="meta-cell"><div class="meta-val">211</div><div class="meta-key">Automated tests</div></div>
-    <div class="meta-cell"><div class="meta-val">22</div><div class="meta-key">Manual procedures</div></div>
-    <div class="meta-cell"><div class="meta-val">2</div><div class="meta-key">Physical test devices</div></div>
-    <div class="meta-cell"><div class="meta-val">Sev</div><div class="meta-key">Triaged known issues</div></div>
-    <div class="meta-cell"><div class="meta-val">Gate</div><div class="meta-key">Written ship / no-ship</div></div>
-  </div>
-  <p class="sanitize-note">211 automated tests and 22 manual procedures, run on two physical handsets. Counts verified against the source before publishing. The automated suite has already earned its keep twice — it caught a readout-overflow defect, and later a teardown race that four rounds of code review missed (both documented below).</p>
+    <section class="doc-head">
+      <div class="sheet col">
+        <div class="doc-title">FreqCraft Mobile QA Test SOP</div>
+        <div class="doc-meta">
+          Version 1.3 &nbsp;·&nbsp; 2026-07-05 &nbsp;·&nbsp; Directive Craft LLC<br>
+          App: FreqCraft Android 1.1.0 (Flutter/Dart) &nbsp;·&nbsp; Status: ACTIVE, release QA procedure
+        </div>
+        <div class="doc-purpose">
+          <p><strong>Purpose.</strong> Define and execute pre-launch QA across two layers: an automated adversarial suite, then hands-on device work, a manual pass on the primary handset (Phase A) and physical-device release qualification on both handsets (Phase B). Phase B is the release gate; the app bundle is not submitted to the store until every Phase B criterion is met.</p>
+          <p><strong>Scope.</strong> FreqCraft 1.1.0, Android only, including multi-voice sessions, the live waveform visualizer and timed-session behavior. Out of scope: iOS, accessibility/TalkBack (deferred). <strong>Trigger:</strong> developer declares the build ready for QA, run the automated suite first, then Phase A, then Phase B.</p>
+        </div>
+      </div>
+    </section>
 
-  <hr class="divider" />
+    <!-- ── AUTOMATED ── -->
+    <section class="phase">
+      <div class="sheet col">
+        <div class="phase-name">Automated coverage: run first</div>
+        <p class="phase-sub">The adversarial suite is the first gate. It runs the build through input it was never meant to receive, and must pass clean before a human tests anything. It needs no device and no tether, so it runs on every change rather than once per release.</p>
 
-  <!-- ===================== THE DOCUMENT ===================== -->
+        <div class="envbox">
+          <b>Location:</b> test/, 15 files, 211 widget and unit tests, pumped at 720x1604<br>
+          <b>Run:</b> <code>flutter analyze</code> then <code>flutter test</code><br>
+          <b>Gate:</b> analyze clean AND 211/211 green before manual testing begins. Analyze gates the build, not the other way round: a missing import fails a Gradle build in 49 seconds that analyze catches in four.
+        </div>
 
-  <div class="doc-title">FreqCraft Mobile — QA Test SOP</div>
-  <div class="doc-meta">
-    Version 1.3 &nbsp;·&nbsp; 2026-07-05 &nbsp;·&nbsp; Directive Craft LLC<br>
-    App: FreqCraft Android 1.1.0 (Flutter/Dart) &nbsp;·&nbsp; Status: ACTIVE — release QA procedure
-  </div>
+        <div class="test">
+          <div class="test-head"><span class="test-id">SUITE</span><span class="test-title">Adversarial Integration Suite</span></div>
+          <div class="test-purpose">Confirm the app survives malformed and absurd input, mode and state transitions, and edge cases, automatically and repeatably.</div>
+          <ul class="steps">
+            <li>Malformed numeric input: multiple dots, minus signs, letters, whitespace, leading zeros.</li>
+            <li>Absurd-value handling: a 14-digit carrier must not overflow the readout. <em>(This case caught a real defect before it reached a device.)</em></li>
+            <li>Advisory thresholds: carrier &ge; 1000, beat &gt; 100, isochronic pulse &gt; 100.</li>
+            <li>Mode toggling and waveform switching mid-session.</li>
+            <li>Isochronic playback path; the 0 Hz / 0 Hz silence case.</li>
+            <li>Live carrier change during an active session.</li>
+            <li>State leak across begin &rarr; end &rarr; begin cycles.</li>
+            <li>Timed-session REMAINING readout show / clear.</li>
+          </ul>
+          <div class="result note"><b>Implementation note</b> no <code>pumpAndSettle</code>: the live waveform animates continuously, so it never returns and the suite would hang. Use <code>pump(Duration)</code> only.</div>
+          <div class="result"><b>Pass</b> 211/211 green, about 16 seconds, no device. Any failure is fixed and the suite re-run before Phase A.</div>
+        </div>
+      </div>
+    </section>
 
-  <div class="phase-sub" style="margin-top:18px;">
-    <strong>Purpose.</strong> Define and execute pre-launch QA across two layers — an automated
-    adversarial suite, then hands-on device work: a manual pass on the primary handset (Phase A)
-    and physical-device release qualification on both handsets (Phase B). Phase B is the release gate; the app bundle is not submitted to the
-    store until every Phase B criterion is met.<br><br>
-    <strong>Scope.</strong> FreqCraft 1.1.0, Android only, including multi-voice sessions, the live
-    waveform visualizer and timed-session behavior. Out of scope: iOS, accessibility/TalkBack
-    (deferred). <strong>Trigger:</strong> developer declares the build ready for QA — run the
-    automated suite first, then Phase A, then Phase B.
-  </div>
+    <!-- ── PHASE A ── -->
+    <section class="phase">
+      <div class="sheet col">
+        <div class="phase-name">Phase A: manual test procedure</div>
+        <p class="phase-sub">
+          <strong>Environment:</strong> Moto G 2025, Android 16, <code>flutter run</code> from project root.<br>
+          <strong>Result codes:</strong> PASS · FAIL · NOTE (device or OEM behaviour, log and continue).<br>
+          <strong>Why there is no emulator layer.</strong> There used to be one. It was retired because the development machine could not run an Android emulator well enough to trust what it reported about audio, and a test environment you have to discount is worse than none. Every procedure below now runs on hardware from the start, which is also where the audio faults actually live.
+        </p>
 
-  <!-- AUTOMATED -->
-  <div class="phase-banner">Automated Coverage — Run First</div>
-  <div class="phase-sub">The adversarial suite is the first gate. It runs the build through input it was never meant to receive, and must pass clean before a human tests anything. It needs no device and no tether, so it runs on every change rather than once per release.</div>
+        <div class="test">
+          <div class="test-head"><span class="test-id">A-1</span><span class="test-title">First Launch, Disclaimer Flow</span></div>
+          <div class="test-purpose">Verify the disclaimer runs once on first launch and is not skippable.</div>
+          <ul class="steps">
+            <li>Clear stored preferences (<code>adb shell pm clear com.directivecraft.freqcraft</code> or wipe device data).</li>
+            <li>Launch the app; verify the disclaimer screen appears.</li>
+            <li>Acknowledge; verify navigation to the main screen.</li>
+            <li>Cold-start the app again; verify the disclaimer is skipped and the main screen loads directly.</li>
+          </ul>
+          <div class="result"><b>Pass</b> disclaimer appears on first launch only, skipped on every subsequent launch.</div>
+        </div>
 
-  <div class="envbox">
-    <b>Location:</b> test/ — 15 files, 211 widget and unit tests, pumped at 720x1604<br>
-    <b>Run:</b> <code>flutter analyze</code> then <code>flutter test</code><br>
-    <b>Gate:</b> analyze clean AND 211/211 green before manual testing begins. Analyze gates the build, not the other way round: a missing import fails a Gradle build in 49 seconds that analyze catches in four.
-  </div>
+        <div class="test">
+          <div class="test-head"><span class="test-id">A-2</span><span class="test-title">Main Screen, Static UI</span></div>
+          <div class="test-purpose">Verify layout, labels, and static elements are correct.</div>
+          <ul class="steps">
+            <li>Verify the app bar: title centered, bold, letter-spaced; info icon present.</li>
+            <li>Open the About dialog; verify header, feature list, desktop-suite section, source attribution, and a working close action.</li>
+            <li>Verify the subtitle block (&ldquo;Precision Mobile Tool&rdquo; / desktop-suite line).</li>
+            <li>Verify no legacy or placeholder text appears anywhere on screen.</li>
+          </ul>
+          <div class="result"><b>Pass</b> all static elements present and correct, no legacy text visible.</div>
+        </div>
 
-  <div class="test">
-    <div class="test-head"><span class="test-id">SUITE</span><span class="test-title">Adversarial Integration Suite</span></div>
-    <div class="test-purpose">Confirm the app survives malformed and absurd input, mode and state transitions, and edge cases — automatically and repeatably.</div>
-    <ul class="steps">
-      <li>Malformed numeric input: multiple dots, minus signs, letters, whitespace, leading zeros.</li>
-      <li>Absurd-value handling: a 14-digit carrier must not overflow the readout. <em>(This case caught a real defect before it reached a device.)</em></li>
-      <li>Advisory thresholds: carrier ≥ 1000, beat &gt; 100, isochronic pulse &gt; 100.</li>
-      <li>Mode toggling and waveform switching mid-session.</li>
-      <li>Isochronic playback path; the 0 Hz / 0 Hz silence case.</li>
-      <li>Live carrier change during an active session.</li>
-      <li>State leak across begin → end → begin cycles.</li>
-      <li>Timed-session REMAINING readout show / clear.</li>
-    </ul>
-    <div class="result note"><b>Implementation note</b> — no <code>pumpAndSettle</code>: the live waveform animates continuously, so it never returns and the suite would hang. Use <code>pump(Duration)</code> only.</div>
-    <div class="result pass"><b>Pass</b> — 211/211 green, about 16 seconds, no device. Any failure is fixed and the suite re-run before Phase A.</div>
-  </div>
+        <div class="test">
+          <div class="test-head"><span class="test-id">A-3</span><span class="test-title">Mode Selector</span></div>
+          <div class="test-purpose">Verify the mode toggle controls downstream UI correctly in both directions.</div>
+          <ul class="steps">
+            <li>Confirm Binaural is selected on launch; verify it shows Carrier, Beat, and Waveform controls plus the stereo-headphones advisory.</li>
+            <li>Switch to Isochronic; verify Carrier and Pulse Rate show, the waveform selector hides, and the no-headphones advisory appears.</li>
+            <li>Switch back to Binaural; verify the layout reverts correctly.</li>
+          </ul>
+          <div class="result"><b>Pass</b> mode switch controls UI elements and advisory text correctly both ways.</div>
+        </div>
 
-  <!-- PHASE A -->
-  <div class="phase-banner">Phase A — Manual Test Procedure, Primary Handset</div>
-  <div class="phase-sub">
-    <strong>Environment:</strong> Moto G 2025, Android 16, <code>flutter run</code> from project root.<br>
-    <strong>Result codes:</strong> PASS · FAIL · NOTE (device or OEM behaviour — log and continue).<br>
-    <strong>Why there is no emulator layer.</strong> There used to be one. It was retired because the development machine could not run an Android emulator well enough to trust what it reported about audio, and a test environment you have to discount is worse than none. Every procedure below now runs on hardware from the start, which is also where the audio faults actually live.
-  </div>
+        <div class="test">
+          <div class="test-head"><span class="test-id">A-4</span><span class="test-title">Numeric Field Behavior</span></div>
+          <div class="test-purpose">Verify input fields accept correct values, handle edge cases, and release focus cleanly.</div>
+          <ul class="steps">
+            <li>Tap each numeric field (Carrier, Beat, Fade In/Out, Timer); verify all text is selected on tap.</li>
+            <li>Enter <code>120</code> then <code>999</code> in Fade In; verify the value displays in full (field accommodates 3 digits).</li>
+            <li>Enter <code>150</code> in Beat; verify the out-of-range advisory appears, then clears when the value returns to range.</li>
+            <li><b>Regression</b> type a value, then collapse the numpad with the system <em>back</em> gesture (not Done). Verify no text stays highlighted with selection handles, and no selection persists into the session. Values still apply only on Done/Begin.</li>
+          </ul>
+          <div class="result"><b>Pass</b> fields select-on-tap, accept valid values, show/clear advisories at threshold, and clear focus cleanly however the numpad is dismissed.</div>
+        </div>
 
-  <div class="test">
-    <div class="test-head"><span class="test-id">A-1</span><span class="test-title">First Launch — Disclaimer Flow</span></div>
-    <div class="test-purpose">Verify the disclaimer runs once on first launch and is not skippable.</div>
-    <ul class="steps">
-      <li>Clear stored preferences (<code>adb shell pm clear com.directivecraft.freqcraft</code> or wipe device data).</li>
-      <li>Launch the app; verify the disclaimer screen appears.</li>
-      <li>Acknowledge; verify navigation to the main screen.</li>
-      <li>Cold-start the app again; verify the disclaimer is skipped and the main screen loads directly.</li>
-    </ul>
-    <div class="result pass"><b>Pass</b> — disclaimer appears on first launch only, skipped on every subsequent launch.</div>
-  </div>
+        <div class="test">
+          <div class="test-head"><span class="test-id">A-5</span><span class="test-title">Fade Field Alignment</span></div>
+          <div class="test-purpose">Verify visual alignment of the fade controls and stability under toggling.</div>
+          <ul class="steps">
+            <li>Verify both fade input fields share the same right edge (label expanded, field pushed right).</li>
+            <li>Toggle Fade In off then on; verify the field disappears and reappears at the same position with no layout jump.</li>
+          </ul>
+          <div class="result"><b>Pass</b> fields right-aligned; toggling causes no layout shift.</div>
+        </div>
 
-  <div class="test">
-    <div class="test-head"><span class="test-id">A-2</span><span class="test-title">Main Screen — Static UI</span></div>
-    <div class="test-purpose">Verify layout, labels, and static elements are correct.</div>
-    <ul class="steps">
-      <li>Verify the app bar: title centered, bold, letter-spaced; info icon present.</li>
-      <li>Open the About dialog; verify header, feature list, desktop-suite section, source attribution, and a working close action.</li>
-      <li>Verify the subtitle block ("Precision Mobile Tool" / desktop-suite line).</li>
-      <li>Verify no legacy or placeholder text appears anywhere on screen.</li>
-    </ul>
-    <div class="result pass"><b>Pass</b> — all static elements present and correct, no legacy text visible.</div>
-  </div>
+        <div class="test">
+          <div class="test-head"><span class="test-id">A-6</span><span class="test-title">Audio Playback, Basic</span></div>
+          <div class="test-purpose">Verify audio starts, produces output, and stops cleanly in both modes.</div>
+          <ul class="steps">
+            <li>Load default parameters (200 Hz carrier, 10 Hz beat, Binaural). Start the session; verify the button changes state and audio is audible.</li>
+            <li>End the session; verify audio stops and the button reverts.</li>
+            <li>Repeat in Isochronic mode.</li>
+          </ul>
+          <div class="result"><b>Pass</b> audio starts and stops cleanly; button state follows session state.</div>
+        </div>
 
-  <div class="test">
-    <div class="test-head"><span class="test-id">A-3</span><span class="test-title">Mode Selector</span></div>
-    <div class="test-purpose">Verify the mode toggle controls downstream UI correctly in both directions.</div>
-    <ul class="steps">
-      <li>Confirm Binaural is selected on launch; verify it shows Carrier, Beat, and Waveform controls plus the stereo-headphones advisory.</li>
-      <li>Switch to Isochronic; verify Carrier and Pulse Rate show, the waveform selector hides, and the no-headphones advisory appears.</li>
-      <li>Switch back to Binaural; verify the layout reverts correctly.</li>
-    </ul>
-    <div class="result pass"><b>Pass</b> — mode switch controls UI elements and advisory text correctly both ways.</div>
-  </div>
+        <div class="test">
+          <div class="test-head"><span class="test-id">A-7</span><span class="test-title">Fade In / Fade Out, Perceptual Curve</span></div>
+          <div class="test-purpose">Verify the fade curve is perceptually gradual across the full duration. Validates the fix for a prior linear fade that sounded complete in roughly one-third of the intended time.</div>
+          <ul class="steps">
+            <li>Set a 30-second fade in. Start the session and monitor: very low for the first ~10s, rising through the middle third, full only near the 30s mark, never &ldquo;done&rdquo; early.</li>
+            <li>Enable a 30-second fade out and end the session; verify it is perceptually gradual, not abrupt.</li>
+          </ul>
+          <div class="result"><b>Pass</b> fade feels linear to the human ear across the full duration. (A quadratic curve produces this perception; linear does not.)</div>
+        </div>
 
-  <div class="test">
-    <div class="test-head"><span class="test-id">A-4</span><span class="test-title">Numeric Field Behavior</span></div>
-    <div class="test-purpose">Verify input fields accept correct values, handle edge cases, and release focus cleanly.</div>
-    <ul class="steps">
-      <li>Tap each numeric field (Carrier, Beat, Fade In/Out, Timer); verify all text is selected on tap.</li>
-      <li>Enter <code>120</code> then <code>999</code> in Fade In; verify the value displays in full (field accommodates 3 digits).</li>
-      <li>Enter <code>150</code> in Beat; verify the out-of-range advisory appears, then clears when the value returns to range.</li>
-      <li><b>Regression</b> — type a value, then collapse the numpad with the system <em>back</em> gesture (not Done). Verify no text stays highlighted with selection handles, and no selection persists into the session. Values still apply only on Done/Begin.</li>
-    </ul>
-    <div class="result pass"><b>Pass</b> — fields select-on-tap, accept valid values, show/clear advisories at threshold, and clear focus cleanly however the numpad is dismissed.</div>
-  </div>
+        <div class="test">
+          <div class="test-head"><span class="test-id">A-8</span><span class="test-title">Race Condition Regression, Volume Spike</span></div>
+          <div class="test-purpose">Verify the &ldquo;alarm-clock&rdquo; volume spike is gone. History: volume spiked in the final seconds before fade-out when a timer was used with fade enabled (overlapping fade coroutines).</div>
+          <ul class="steps">
+            <li>Set Timer = 1 minute, Fade In = 5s, Fade Out = 5s, at a comfortable (non-max) volume.</li>
+            <li>Start the session and monitor the full 60 seconds, focusing on the last 10.</li>
+            <li>Verify no sudden volume increase before fade-out, smooth fade from ~55s, and a clean end at 60s with audio at zero.</li>
+          </ul>
+          <div class="result fail"><b>Fail</b> any sudden volume spike or &ldquo;alarm clock&rdquo; effect in the final 10 seconds is a regression. Do not ship.</div>
+        </div>
 
-  <div class="test">
-    <div class="test-head"><span class="test-id">A-5</span><span class="test-title">Fade Field Alignment</span></div>
-    <div class="test-purpose">Verify visual alignment of the fade controls and stability under toggling.</div>
-    <ul class="steps">
-      <li>Verify both fade input fields share the same right edge (label expanded, field pushed right).</li>
-      <li>Toggle Fade In off then on; verify the field disappears and reappears at the same position with no layout jump.</li>
-    </ul>
-    <div class="result pass"><b>Pass</b> — fields right-aligned; toggling causes no layout shift.</div>
-  </div>
+        <div class="test">
+          <div class="test-head"><span class="test-id">A-9</span><span class="test-title">Session Timer</span></div>
+          <div class="test-purpose">Verify timer countdown, auto-stop, and fade-out display behavior.</div>
+          <ul class="steps">
+            <li>Set a 2-minute timer, Fade Out off. Start; verify the countdown begins, audio auto-stops at zero, and the button reverts.</li>
+            <li>Set a 1-minute timer with a 10-second fade out. Verify the fade begins at ~50s.</li>
+            <li><b>Timer / fade display</b> verify the REMAINING countdown keeps ticking <em>through</em> the fade-out and reaches 0:00 exactly as the audio goes silent. It must not jump to 0:00 early while audio is still fading. (1-minute timer, 5s in / 5s out = 5s fade-in, 50s full, 5s fade-out, silent at 0:00.) Manual END hides REMAINING immediately; ELAPSED persists by design.</li>
+          </ul>
+          <div class="result"><b>Pass</b> counts down correctly, auto-stops at zero, fade triggers at the right offset, and the countdown reaches 0:00 in sync with audio silence, no early jump.</div>
+        </div>
 
-  <div class="test">
-    <div class="test-head"><span class="test-id">A-6</span><span class="test-title">Audio Playback — Basic</span></div>
-    <div class="test-purpose">Verify audio starts, produces output, and stops cleanly in both modes.</div>
-    <ul class="steps">
-      <li>Load default parameters (200 Hz carrier, 10 Hz beat, Binaural). Start the session; verify the button changes state and audio is audible.</li>
-      <li>End the session; verify audio stops and the button reverts.</li>
-      <li>Repeat in Isochronic mode.</li>
-    </ul>
-    <div class="result pass"><b>Pass</b> — audio starts and stops cleanly; button state follows session state.</div>
-  </div>
+        <div class="test">
+          <div class="test-head"><span class="test-id">A-10</span><span class="test-title">Preset Persistence, Cold Start</span></div>
+          <div class="test-purpose">Verify stored presets survive a full app restart. (Hot reload does not test persistence, cold start required.)</div>
+          <ul class="steps">
+            <li>Save a user preset with custom parameters and a unique name.</li>
+            <li>Kill the app and cold-start it.</li>
+            <li>Open the Presets screen; verify the preset is present and loads with all parameters restored.</li>
+          </ul>
+          <div class="result"><b>Pass</b> all saved values survive a cold restart.</div>
+        </div>
 
-  <div class="test">
-    <div class="test-head"><span class="test-id">A-7</span><span class="test-title">Fade In / Fade Out — Perceptual Curve</span></div>
-    <div class="test-purpose">Verify the fade curve is perceptually gradual across the full duration. Validates the fix for a prior linear fade that sounded complete in roughly one-third of the intended time.</div>
-    <ul class="steps">
-      <li>Set a 30-second fade in. Start the session and monitor: very low for the first ~10s, rising through the middle third, full only near the 30s mark — never "done" early.</li>
-      <li>Enable a 30-second fade out and end the session; verify it is perceptually gradual, not abrupt.</li>
-    </ul>
-    <div class="result pass"><b>Pass</b> — fade feels linear to the human ear across the full duration. (A quadratic curve produces this perception; linear does not.)</div>
-  </div>
+        <div class="test">
+          <div class="test-head"><span class="test-id">A-11</span><span class="test-title">Presets Screen</span></div>
+          <div class="test-purpose">Verify factory and user preset display and behavior in the single-open accordion UI.</div>
+          <ul class="steps">
+            <li>Verify all 7 factory presets are listed (Deep Sleep, Recovery, Deep Calm, Theta Schumann, Alpha Calm, Beta Focus, Gamma Clarity), each with badge, band/Hz chip, and explore line.</li>
+            <li>Expand a factory preset; verify the drawer shows parameters, attributed note, source, safety note, and Load, with no delete on factory presets.</li>
+            <li>Verify user presets offer quick-Load on the collapsed row and Delete only inside the expanded drawer (with a confirm dialog).</li>
+            <li>Load a factory preset; verify parameters reach the main screen and Gamma Clarity loads in Isochronic mode.</li>
+          </ul>
+          <div class="result"><b>Pass</b> all presets present, accordion behavior correct, factory vs. user controls correct, modes load correctly.</div>
+        </div>
 
-  <div class="test">
-    <div class="test-head"><span class="test-id">A-8</span><span class="test-title">Race Condition Regression — Volume Spike</span></div>
-    <div class="test-purpose">Verify the "alarm-clock" volume spike is gone. History: volume spiked in the final seconds before fade-out when a timer was used with fade enabled (overlapping fade coroutines).</div>
-    <ul class="steps">
-      <li>Set Timer = 1 minute, Fade In = 5s, Fade Out = 5s, at a comfortable (non-max) volume.</li>
-      <li>Start the session and monitor the full 60 seconds, focusing on the last 10.</li>
-      <li>Verify no sudden volume increase before fade-out, smooth fade from ~55s, and a clean end at 60s with audio at zero.</li>
-    </ul>
-    <div class="result fail"><b>Fail</b> — any sudden volume spike or "alarm clock" effect in the final 10 seconds is a regression. Do not ship.</div>
-  </div>
+        <div class="test">
+          <div class="test-head"><span class="test-id">A-12</span><span class="test-title">Footer Disclaimer</span></div>
+          <div class="test-purpose">Verify the sourcing disclaimer is present at the bottom of the Presets screen.</div>
+          <ul class="steps">
+            <li>Scroll to the bottom of the Presets screen; verify the sourcing/exploration disclaimer text is present, small, gray, and centered.</li>
+          </ul>
+          <div class="result"><b>Pass</b> footer disclaimer present, correct text and styling.</div>
+        </div>
 
-  <div class="test">
-    <div class="test-head"><span class="test-id">A-9</span><span class="test-title">Session Timer</span></div>
-    <div class="test-purpose">Verify timer countdown, auto-stop, and fade-out display behavior.</div>
-    <ul class="steps">
-      <li>Set a 2-minute timer, Fade Out off. Start; verify the countdown begins, audio auto-stops at zero, and the button reverts.</li>
-      <li>Set a 1-minute timer with a 10-second fade out. Verify the fade begins at ~50s.</li>
-      <li><b>Timer / fade display</b> — verify the REMAINING countdown keeps ticking <em>through</em> the fade-out and reaches 0:00 exactly as the audio goes silent. It must not jump to 0:00 early while audio is still fading. (1-minute timer, 5s in / 5s out = 5s fade-in, 50s full, 5s fade-out, silent at 0:00.) Manual END hides REMAINING immediately; ELAPSED persists by design.</li>
-    </ul>
-    <div class="result pass"><b>Pass</b> — counts down correctly, auto-stops at zero, fade triggers at the right offset, and the countdown reaches 0:00 in sync with audio silence — no early jump.</div>
-  </div>
+        <div class="test">
+          <div class="test-head"><span class="test-id">A-13</span><span class="test-title">Live Waveform Visualizer</span></div>
+          <div class="test-purpose">Verify the live waveform renders continuously, matches the selected type and mode, stays readable across the Hz range, idles correctly, and does not stutter during a session.</div>
+          <ul class="steps">
+            <li><b>Continuous scroll</b> watch &ge;10s; verify smooth scrolling with no seam, snap-back, or repeating-interval jump. It must read as a continuous feed, not a loop.</li>
+            <li><b>Shape matches type</b> in Binaural, cycle Sine / Square / Sawtooth / Triangle; verify the on-screen shape changes to match each and matches the engine.</li>
+            <li><b>Isochronic density</b> vary carrier and pulse across low and high values; verify visual density tracks the values and stays readable at low Hz (no lonely hump with dead gaps).</li>
+            <li><b>Readout overflow</b> enter an absurd 14-digit carrier; verify the readout shrinks to fit and shows the full number, no overflow, no error, no truncation box. Normal values render unchanged.</li>
+            <li><b>Idle behavior</b> stop the session; verify the wave freezes to a clean static silhouette (no mid-wave smear) and re-animates smoothly on restart.</li>
+            <li><b>No stutter</b> during a timed session, watch &ge;10s; verify no per-second hitch as ELAPSED / REMAINING tick.</li>
+          </ul>
+          <div class="result"><b>Pass</b> continuous, type- and mode-accurate, readable at all Hz, readout never overflows, idles and re-animates cleanly, no per-second stutter.</div>
+        </div>
+      </div>
+    </section>
 
-  <div class="test">
-    <div class="test-head"><span class="test-id">A-10</span><span class="test-title">Preset Persistence — Cold Start</span></div>
-    <div class="test-purpose">Verify stored presets survive a full app restart. (Hot reload does not test persistence — cold start required.)</div>
-    <ul class="steps">
-      <li>Save a user preset with custom parameters and a unique name.</li>
-      <li>Kill the app and cold-start it.</li>
-      <li>Open the Presets screen; verify the preset is present and loads with all parameters restored.</li>
-    </ul>
-    <div class="result pass"><b>Pass</b> — all saved values survive a cold restart.</div>
-  </div>
+    <!-- ── PHASE B ── -->
+    <section class="phase">
+      <div class="sheet col">
+        <div class="phase-name">Phase B: physical device release gate</div>
+        <p class="phase-sub">
+          <strong>Prerequisites:</strong> automated suite green; all Phase A items PASS or NOTE (no unresolved FAILs).<br>
+          <strong>Devices:</strong> Moto G7 Power (Android 10, wired-audio reference, 3.5mm jack); Moto G 2025 (Android 16, current-API reference). Oldest supported and newest supported, so a release is exercised at both ends of the range it claims. The release-validation install sideloads the signed app bundle.
+        </p>
 
-  <div class="test">
-    <div class="test-head"><span class="test-id">A-11</span><span class="test-title">Presets Screen</span></div>
-    <div class="test-purpose">Verify factory and user preset display and behavior in the single-open accordion UI.</div>
-    <ul class="steps">
-      <li>Verify all 7 factory presets are listed (Deep Sleep, Recovery, Deep Calm, Theta Schumann, Alpha Calm, Beta Focus, Gamma Clarity), each with badge, band/Hz chip, and explore line.</li>
-      <li>Expand a factory preset; verify the drawer shows parameters, attributed note, source, safety note, and Load — with no delete on factory presets.</li>
-      <li>Verify user presets offer quick-Load on the collapsed row and Delete only inside the expanded drawer (with a confirm dialog).</li>
-      <li>Load a factory preset; verify parameters reach the main screen and Gamma Clarity loads in Isochronic mode.</li>
-    </ul>
-    <div class="result pass"><b>Pass</b> — all presets present, accordion behavior correct, factory vs. user controls correct, modes load correctly.</div>
-  </div>
+        <div class="test">
+          <div class="test-head"><span class="test-id">B-0</span><span class="test-title">Device Setup</span></div>
+          <div class="test-purpose">Prepare the physical device for testing.</div>
+          <ul class="steps">
+            <li>Enable Developer Options and USB Debugging.</li>
+            <li>Connect via USB and confirm <code>adb devices</code> recognizes the device.</li>
+            <li>Install the build (debug install, or signed bundle via bundletool for release validation).</li>
+          </ul>
+        </div>
 
-  <div class="test">
-    <div class="test-head"><span class="test-id">A-12</span><span class="test-title">Footer Disclaimer</span></div>
-    <div class="test-purpose">Verify the sourcing disclaimer is present at the bottom of the Presets screen.</div>
-    <ul class="steps">
-      <li>Scroll to the bottom of the Presets screen; verify the sourcing/exploration disclaimer text is present, small, gray, and centered.</li>
-    </ul>
-    <div class="result pass"><b>Pass</b> — footer disclaimer present, correct text and styling.</div>
-  </div>
+        <div class="test">
+          <div class="test-head"><span class="test-id">B-1</span><span class="test-title">All Phase A Tests, Repeat on Device</span></div>
+          <div class="test-purpose">Confirm every Phase A behaviour holds on the SECOND handset and on the signed bundle, not just on the one it was developed against.</div>
+          <ul class="steps">
+            <li>Run A-1 through A-13 on the Moto G7 Power, from the sideloaded signed app bundle.</li>
+            <li>Treat differences between the two handsets as data, log them with the OS version, and fail only if audio is clearly wrong.</li>
+          </ul>
+          <div class="result"><b>Pass</b> all Phase A items pass on both handsets, or the difference is logged against a named device and OS version.</div>
+        </div>
 
-  <div class="test">
-    <div class="test-head"><span class="test-id">A-13</span><span class="test-title">Live Waveform Visualizer</span></div>
-    <div class="test-purpose">Verify the live waveform renders continuously, matches the selected type and mode, stays readable across the Hz range, idles correctly, and does not stutter during a session.</div>
-    <ul class="steps">
-      <li><b>Continuous scroll</b> — watch ≥10s; verify smooth scrolling with no seam, snap-back, or repeating-interval jump. It must read as a continuous feed, not a loop.</li>
-      <li><b>Shape matches type</b> — in Binaural, cycle Sine / Square / Sawtooth / Triangle; verify the on-screen shape changes to match each and matches the engine.</li>
-      <li><b>Isochronic density</b> — vary carrier and pulse across low and high values; verify visual density tracks the values and stays readable at low Hz (no lonely hump with dead gaps).</li>
-      <li><b>Readout overflow</b> — enter an absurd 14-digit carrier; verify the readout shrinks to fit and shows the full number — no overflow, no error, no truncation box. Normal values render unchanged.</li>
-      <li><b>Idle behavior</b> — stop the session; verify the wave freezes to a clean static silhouette (no mid-wave smear) and re-animates smoothly on restart.</li>
-      <li><b>No stutter</b> — during a timed session, watch ≥10s; verify no per-second hitch as ELAPSED / REMAINING tick.</li>
-    </ul>
-    <div class="result pass"><b>Pass</b> — continuous, type- and mode-accurate, readable at all Hz, readout never overflows, idles and re-animates cleanly, no per-second stutter.</div>
-  </div>
+        <div class="test">
+          <div class="test-head"><span class="test-id">B-2</span><span class="test-title">Binaural Audio Quality</span></div>
+          <div class="test-purpose">Verify binaural beat perception on stereo headphones, different frequencies per ear.</div>
+          <ul class="steps">
+            <li>On headphones, load Theta Schumann (7.83 Hz beat, 136.1 Hz carrier); verify an audible beating sensation at ~7&ndash;8 Hz.</li>
+            <li>Step up through Alpha Calm (10 Hz) and Beta Focus (14 Hz); verify the perceived rate increases. Verify a high carrier stays centered, not pushed to one ear.</li>
+            <li>Remove one headphone; verify the beat perception diminishes, confirming binaural, not isochronic, processing.</li>
+          </ul>
+          <div class="result"><b>Pass</b> rhythmic pulsing at the correct rate, stereo-dependent, tone centered.</div>
+        </div>
 
-  <!-- PHASE B -->
-  <div class="phase-banner">Phase B — Physical Device Release Gate</div>
-  <div class="phase-sub">
-    <strong>Prerequisites:</strong> automated suite green; all Phase A items PASS or NOTE (no unresolved FAILs).<br>
-    <strong>Devices:</strong> Moto G7 Power (Android 10, wired-audio reference, 3.5mm jack); Moto G 2025 (Android 16, current-API reference). Oldest supported and newest supported, so a release is exercised at both ends of the range it claims. The release-validation install sideloads the signed app bundle.
-  </div>
+        <div class="test">
+          <div class="test-head"><span class="test-id">B-3</span><span class="test-title">Isochronic Audio Quality</span></div>
+          <div class="test-purpose">Verify isochronic pulses are audible and clean on both speakers and headphones.</div>
+          <ul class="steps">
+            <li>Load Gamma Clarity (40 Hz isochronic); verify rapid pulsing on speakers and the same pulsing (not a beat) on headphones.</li>
+            <li>Set pulse rate to 4 Hz; verify slow, distinct pulses with clean edges. Set to 40 Hz; verify rapid pulsing stays clean, no buzzing or overflow artifacts.</li>
+          </ul>
+          <div class="result"><b>Pass</b> pulses audible on speakers, clean edges, no artifacts at any rate.</div>
+        </div>
 
-  <div class="test">
-    <div class="test-head"><span class="test-id">B-0</span><span class="test-title">Device Setup</span></div>
-    <div class="test-purpose">Prepare the physical device for testing.</div>
-    <ul class="steps">
-      <li>Enable Developer Options and USB Debugging.</li>
-      <li>Connect via USB and confirm <code>adb devices</code> recognizes the device.</li>
-      <li>Install the build (debug install, or signed bundle via bundletool for release validation).</li>
-    </ul>
-  </div>
+        <div class="test">
+          <div class="test-head"><span class="test-id">B-4</span><span class="test-title">Background Audio Mixing</span></div>
+          <div class="test-purpose">Verify the app runs alongside other audio rather than muting it, a key design differentiator (ducking, not interrupting).</div>
+          <ul class="steps">
+            <li>Start playback in a music app, switch to the app, and start a session.</li>
+            <li>Verify both are audible simultaneously (slight ducking of the music is acceptable).</li>
+            <li>End the session; verify the music app is unaffected.</li>
+          </ul>
+          <div class="result fail"><b>Fail</b> if the app mutes or pauses the music app entirely. Do not ship.</div>
+        </div>
 
-  <div class="test">
-    <div class="test-head"><span class="test-id">B-1</span><span class="test-title">All Phase A Tests — Repeat on Device</span></div>
-    <div class="test-purpose">Confirm every Phase A behaviour holds on the SECOND handset and on the signed bundle, not just on the one it was developed against.</div>
-    <ul class="steps">
-      <li>Run A-1 through A-13 on the Moto G7 Power, from the sideloaded signed app bundle.</li>
-      <li>Treat differences between the two handsets as data — log them with the OS version — and fail only if audio is clearly wrong.</li>
-    </ul>
-    <div class="result pass"><b>Pass</b> — all Phase A items pass on both handsets, or the difference is logged against a named device and OS version.</div>
-  </div>
+        <div class="test">
+          <div class="test-head"><span class="test-id">B-5</span><span class="test-title">Screen Lock / Background Playback</span></div>
+          <div class="test-purpose">Verify audio continues when the screen locks.</div>
+          <ul class="steps">
+            <li>Start a session (no timer, no fade), lock the screen, and wait 30 seconds; verify audio is still audible.</li>
+            <li>Unlock; verify the session is still active. End the session; audio stops.</li>
+          </ul>
+          <div class="result note"><b>Note</b> if audio stops after lock, investigate the foreground-service path and log it. This blocks launch only if audio stops within 5 minutes (see B-6).</div>
+        </div>
 
-  <div class="test">
-    <div class="test-head"><span class="test-id">B-2</span><span class="test-title">Binaural Audio Quality</span></div>
-    <div class="test-purpose">Verify binaural beat perception on stereo headphones — different frequencies per ear.</div>
-    <ul class="steps">
-      <li>On headphones, load Theta Schumann (7.83 Hz beat, 136.1 Hz carrier); verify an audible beating sensation at ~7–8 Hz.</li>
-      <li>Step up through Alpha Calm (10 Hz) and Beta Focus (14 Hz); verify the perceived rate increases. Verify a high carrier stays centered, not pushed to one ear.</li>
-      <li>Remove one headphone; verify the beat perception diminishes — confirming binaural, not isochronic, processing.</li>
-    </ul>
-    <div class="result pass"><b>Pass</b> — rhythmic pulsing at the correct rate, stereo-dependent, tone centered.</div>
-  </div>
+        <div class="test">
+          <div class="test-head"><span class="test-id">B-6</span><span class="test-title">OEM Battery Management, Extended Run</span></div>
+          <div class="test-purpose">Detect audio termination by Android battery optimization, the risk that only real OEM power management produces, and the most common cause of a session dying unattended.</div>
+          <ul class="steps">
+            <li>Start a continuous session at comfortable volume, lock the screen, and set the phone down.</li>
+            <li>Monitor audio at 5, 10, 15, and 20 minutes; document whether and when audio stops.</li>
+          </ul>
+          <div class="result"><b>Pass</b> audio runs continuously for 20+ minutes screen-locked.</div>
+          <div class="result fail"><b>Blocker</b> audio stops within 5 minutes; the core use case is non-functional. Resolve before submitting. (Stops after 5 minutes: log and triage by device.)</div>
+        </div>
 
-  <div class="test">
-    <div class="test-head"><span class="test-id">B-3</span><span class="test-title">Isochronic Audio Quality</span></div>
-    <div class="test-purpose">Verify isochronic pulses are audible and clean on both speakers and headphones.</div>
-    <ul class="steps">
-      <li>Load Gamma Clarity (40 Hz isochronic); verify rapid pulsing on speakers and the same pulsing (not a beat) on headphones.</li>
-      <li>Set pulse rate to 4 Hz; verify slow, distinct pulses with clean edges. Set to 40 Hz; verify rapid pulsing stays clean — no buzzing or overflow artifacts.</li>
-    </ul>
-    <div class="result pass"><b>Pass</b> — pulses audible on speakers, clean edges, no artifacts at any rate.</div>
-  </div>
+        <div class="test">
+          <div class="test-head"><span class="test-id">B-7</span><span class="test-title">Volume Control</span></div>
+          <div class="test-purpose">Verify system volume buttons and the in-app slider both affect output.</div>
+          <ul class="steps">
+            <li>During a session, verify system volume up/down affects output, and the in-app slider adjusts level independently.</li>
+          </ul>
+          <div class="result"><b>Pass</b> both system and in-app controls govern audio level.</div>
+        </div>
 
-  <div class="test">
-    <div class="test-head"><span class="test-id">B-4</span><span class="test-title">Background Audio Mixing</span></div>
-    <div class="test-purpose">Verify the app runs alongside other audio rather than muting it — a key design differentiator (ducking, not interrupting).</div>
-    <ul class="steps">
-      <li>Start playback in a music app, switch to the app, and start a session.</li>
-      <li>Verify both are audible simultaneously (slight ducking of the music is acceptable).</li>
-      <li>End the session; verify the music app is unaffected.</li>
-    </ul>
-    <div class="result fail"><b>Fail</b> — if the app mutes or pauses the music app entirely. Do not ship.</div>
-  </div>
+        <div class="test">
+          <div class="test-head"><span class="test-id">B-8</span><span class="test-title">Cold Start After Device Reboot</span></div>
+          <div class="test-purpose">Verify stored state persists across a full device reboot.</div>
+          <ul class="steps">
+            <li>Save a user preset and fully reboot the device.</li>
+            <li>Open the app; verify the disclaimer does not reappear and the saved preset is present.</li>
+          </ul>
+          <div class="result"><b>Pass</b> all state persists through a full reboot.</div>
+        </div>
 
-  <div class="test">
-    <div class="test-head"><span class="test-id">B-5</span><span class="test-title">Screen Lock / Background Playback</span></div>
-    <div class="test-purpose">Verify audio continues when the screen locks.</div>
-    <ul class="steps">
-      <li>Start a session (no timer, no fade), lock the screen, and wait 30 seconds; verify audio is still audible.</li>
-      <li>Unlock; verify the session is still active. End the session; audio stops.</li>
-    </ul>
-    <div class="result note"><b>Note</b> — if audio stops after lock, investigate the foreground-service path and log it. This blocks launch only if audio stops within 5 minutes (see B-6).</div>
-  </div>
+        <div class="gate">
+          <h3>Release Gate Checklist</h3>
+          <p>Every item must be checked before the app bundle is submitted.</p>
+          <ul class="steps">
+            <li>Automated suite: analyze clean and 211/211 green.</li>
+            <li>B-1: all Phase A tests pass on the physical device.</li>
+            <li>B-2 / B-3: binaural beat perception and isochronic pulses confirmed.</li>
+            <li>B-4: background mixing confirmed, does not mute other apps.</li>
+            <li>B-5 / B-6: screen-lock playback stable; minimum 10 minutes background (20 preferred; under 5 minutes = launch blocker).</li>
+            <li>B-7: volume controls functional. B-8: persistence confirmed through reboot.</li>
+          </ul>
+          <p class="gate-status">GATE STATUS: &nbsp; [ ] OPEN &nbsp; [ ] PASSED &nbsp; [ ] BLOCKED</p>
+        </div>
+      </div>
+    </section>
 
-  <div class="test">
-    <div class="test-head"><span class="test-id">B-6</span><span class="test-title">OEM Battery Management — Extended Run</span></div>
-    <div class="test-purpose">Detect audio termination by Android battery optimization — the risk that only real OEM power management produces, and the most common cause of a session dying unattended.</div>
-    <ul class="steps">
-      <li>Start a continuous session at comfortable volume, lock the screen, and set the phone down.</li>
-      <li>Monitor audio at 5, 10, 15, and 20 minutes; document whether and when audio stops.</li>
-    </ul>
-    <div class="result pass"><b>Pass</b> — audio runs continuously for 20+ minutes screen-locked.</div>
-    <div class="result fail"><b>Blocker</b> — audio stops within 5 minutes; the core use case is non-functional. Resolve before submitting. (Stops after 5 minutes: log and triage by device.)</div>
-  </div>
+    <!-- ── KNOWN GAPS ── -->
+    <section class="block">
+      <div class="sheet col">
+        <h2>Known gaps and open issues</h2>
+        <p class="prose" style="margin-bottom:20px;">Disclosed and triaged, not hidden.</p>
+        <div class="gaps-wrap">
+          <table class="gaps">
+            <thead><tr><th>ID</th><th>Severity</th><th>Description</th><th>Status / Plan</th></tr></thead>
+            <tbody>
+              <tr><td>STOP</td><td>Low</td><td>Teardown race in the stop path, a reference used after an <code>await</code> without a mounted-check could log an error if the screen was dismissed mid-stop. Surfaced by the expanded test suite, not by four rounds of code review (including a maximum-effort audit).</td><td>Fixed + verified</td></tr>
+              <tr><td>P4</td><td>Low</td><td>A dead validation method in the engine, never called; validation handled in the UI.</td><td>Later release</td></tr>
+              <tr><td>ENG</td><td>Deferred</td><td>Engine hardening (deterministic stop poll, completer-based fade cancel, band-limited waveforms).</td><td>Post-launch</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
 
-  <div class="test">
-    <div class="test-head"><span class="test-id">B-7</span><span class="test-title">Volume Control</span></div>
-    <div class="test-purpose">Verify system volume buttons and the in-app slider both affect output.</div>
-    <ul class="steps">
-      <li>During a session, verify system volume up/down affects output, and the in-app slider adjusts level independently.</li>
-    </ul>
-    <div class="result pass"><b>Pass</b> — both system and in-app controls govern audio level.</div>
-  </div>
+    <!-- ── VERSION LOG ── -->
+    <section class="block">
+      <div class="sheet col">
+        <h2>Version log</h2>
+        <p class="prose" style="margin-bottom:16px;">Change control is part of the deliverable.</p>
+        <div class="version-log">
+          <b>v1.0</b> &nbsp;2026-06-12, Initial release. Built from the QA SOP handoff.<br>
+          <b>v1.1</b> &nbsp;2026-06-14, Accordion preset UI, preset names, contact email; Phase A + Phase B.<br>
+          <b>v1.2</b> &nbsp;2026-06-22, Stamped to app 1.0.0. Added the automated adversarial suite (29 tests) as the first gate; added the Live Waveform Visualizer section (A-13); added the timer fade-out display spec (A-9) and the numpad-focus regression (A-4). Sanitized internal paths; defect forensics tracked separately in the bug log.<br>
+          <b>v1.3</b> &nbsp;2026-07-05, Adversarial suite expanded 29 &rarr; 44 on-device checks; added 12 unit tests (56 automated total). Physical testing run on two handsets (Moto G7 Power + Pixel 6 Pro). Logged the teardown-race defect (STOP) the suite caught after code review missed it, fixed and verified. Counts verified against source.<br>
+          <b>v1.4</b> &nbsp;2026-08-29, Stamped to app 1.1.0 (five-voice sessions). Automated coverage restated: <b>211 widget and unit tests</b> replacing the 56, and the suite no longer needs a tethered device, so it runs on every change instead of once per release. Fleet updated, the Pixel 6 Pro is out; the Moto G 2025 (Android 16) is in, pairing oldest-supported with newest-supported. Counts verified against source: 15 files, 211 green, analyze clean.<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;<i>Also v1.4</i>, the emulator layer is retired and the process is now two layers, not three. The development machine could not run an Android emulator well enough to trust its audio, so Phase A moved onto the primary handset and Phase B became the second-handset and signed-bundle gate. Known issue P5 (channel reversal at low beat frequency) is withdrawn with it: it was only ever observed in that emulator and never reproduced on hardware.
+        </div>
+      </div>
+    </section>
 
-  <div class="test">
-    <div class="test-head"><span class="test-id">B-8</span><span class="test-title">Cold Start After Device Reboot</span></div>
-    <div class="test-purpose">Verify stored state persists across a full device reboot.</div>
-    <ul class="steps">
-      <li>Save a user preset and fully reboot the device.</li>
-      <li>Open the app; verify the disclaimer does not reappear and the saved preset is present.</li>
-    </ul>
-    <div class="result pass"><b>Pass</b> — all state persists through a full reboot.</div>
-  </div>
+    <section class="cta">
+      <div class="sheet col">
+        <h2>This is the app it ships.</h2>
+        <p>FreqCraft is built and tested the way this page describes: precision audio, zero data collection, one-time purchase. See it for yourself.</p>
+        <a class="act" href="https://freqcraft.app" target="_blank" rel="noopener noreferrer">See FreqCraft <span class="arr">&rarr;</span></a>
+      </div>
+    </section>
+  </main>
 
-  <!-- GATE -->
-  <div class="gate">
-    <h3>Release Gate Checklist</h3>
-    <p style="font-size:0.84rem;color:var(--muted);margin-bottom:14px;line-height:1.6;">Every item must be checked before the app bundle is submitted.</p>
-    <ul class="steps">
-      <li>Automated suite: analyze clean and 211/211 green.</li>
-      <li>B-1: all Phase A tests pass on the physical device.</li>
-      <li>B-2 / B-3: binaural beat perception and isochronic pulses confirmed.</li>
-      <li>B-4: background mixing confirmed — does not mute other apps.</li>
-      <li>B-5 / B-6: screen-lock playback stable; minimum 10 minutes background (20 preferred; under 5 minutes = launch blocker).</li>
-      <li>B-7: volume controls functional. B-8: persistence confirmed through reboot.</li>
-    </ul>
-    <p style="font-family:'JetBrains Mono',monospace;font-size:0.78rem;color:var(--amber);margin-top:16px;">GATE STATUS: &nbsp; [ ] OPEN &nbsp; [ ] PASSED &nbsp; [ ] BLOCKED</p>
-  </div>
-
-  <!-- KNOWN GAPS -->
-  <div class="phase-sub" style="margin-top:34px;"><strong>Known gaps and open issues</strong> — disclosed and triaged, not hidden.</div>
-  <table class="gaps">
-    <thead><tr><th>ID</th><th>Severity</th><th>Description</th><th>Status / Plan</th></tr></thead>
-    <tbody>
-      <tr><td>STOP</td><td>Low</td><td>Teardown race in the stop path — a reference used after an <code>await</code> without a mounted-check could log an error if the screen was dismissed mid-stop. Surfaced by the expanded test suite, not by four rounds of code review (including a maximum-effort audit).</td><td>Fixed + verified</td></tr>
-      <tr><td>P4</td><td>Low</td><td>A dead validation method in the engine — never called; validation handled in the UI.</td><td>Later release</td></tr>
-      <tr><td>ENG</td><td>Deferred</td><td>Engine hardening (deterministic stop poll, completer-based fade cancel, band-limited waveforms).</td><td>Post-launch</td></tr>
-    </tbody>
-  </table>
-
-  <!-- VERSION LOG -->
-  <div class="phase-sub" style="margin-top:10px;"><strong>Version log</strong> — change control is part of the deliverable.</div>
-  <div class="version-log">
-    <b>v1.0</b> &nbsp;2026-06-12 — Initial release. Built from the QA SOP handoff.<br>
-    <b>v1.1</b> &nbsp;2026-06-14 — Accordion preset UI, preset names, contact email; Phase A + Phase B.<br>
-    <b>v1.2</b> &nbsp;2026-06-22 — Stamped to app 1.0.0. Added the automated adversarial suite (29 tests) as the first gate; added the Live Waveform Visualizer section (A-13); added the timer fade-out display spec (A-9) and the numpad-focus regression (A-4). Sanitized internal paths; defect forensics tracked separately in the bug log.<br>
-    <b>v1.3</b> &nbsp;2026-07-05 — Adversarial suite expanded 29 → 44 on-device checks; added 12 unit tests (56 automated total). Physical testing run on two handsets (Moto G7 Power + Pixel 6 Pro). Logged the teardown-race defect (STOP) the suite caught after code review missed it — fixed and verified. Counts verified against source.<br>
-    <b>v1.4</b> &nbsp;2026-08-29 — Stamped to app 1.1.0 (five-voice sessions). Automated coverage restated: <b>211 widget and unit tests</b> replacing the 56, and the suite no longer needs a tethered device, so it runs on every change instead of once per release. Fleet updated — the Pixel 6 Pro is out; the Moto G 2025 (Android 16) is in, pairing oldest-supported with newest-supported. Counts verified against source: 15 files, 211 green, analyze clean.<br>
-    &nbsp;&nbsp;&nbsp;&nbsp;<i>Also v1.4</i> — the emulator layer is retired and the process is now two layers, not three. The development machine could not run an Android emulator well enough to trust its audio, so Phase A moved onto the primary handset and Phase B became the second-handset and signed-bundle gate. Known issue P5 (channel reversal at low beat frequency) is withdrawn with it: it was only ever observed in that emulator and never reproduced on hardware.
-  </div>
-
-  <!-- CTA -->
-  <div class="cta-block">
-    <div>
-      <h2>This is the app it ships.</h2>
-      <p>FreqCraft is built and tested the way this page describes — precision audio, zero data collection, one-time purchase. See it for yourself.</p>
-    </div>
-    <a class="btn-primary" href="https://freqcraft.app" target="_blank" rel="noopener noreferrer">See FreqCraft →</a>
-  </div>
-
-  <!-- FOOTER -->
   <footer>
-    <div class="footer-mark">Directive<span>Craft</span> &nbsp;·&nbsp; LLC</div>
-    <div class="footer-links">
-      <a href="/">Home</a>
-      <a href="https://freqcraft.app" target="_blank" rel="noopener noreferrer">FreqCraft</a>
-      <a class="email-link" href="#">Contact</a>
-      <a href="/privacy">Privacy</a>
+    <div class="sheet">
+      <div class="foot-top">
+        <span class="foot-mark">DirectiveCraft &nbsp;·&nbsp; LLC</span>
+        <nav class="foot-links">
+          <a href="/">Home</a>
+          <a href="/privacy">Privacy</a>
+          <a href="https://freqcraft.app" target="_blank" rel="noopener noreferrer">FreqCraft</a>
+          <a class="email-link" href="#">Contact</a>
+        </nav>
+      </div>
+      <noscript><p class="ns-mail">Direct email: contact&#64;directivecraft&#46;com</p></noscript>
+      <p class="foot-rev">FreqCraft QA SOP · Doc DC-000-T · App 1.1.0 · No tracking on this page</p>
     </div>
   </footer>
 
-</div>
-
 <script>
-  // Background: slow drifting horizontal document lines (matches site).
-  var canvas = document.getElementById('bgCanvas');
-  var ctx    = canvas.getContext('2d');
-  var W, H, lines = [], LINE_COUNT = 18;
-  function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; initLines(); }
-  function initLines() {
-    lines = [];
-    for (var i = 0; i < LINE_COUNT; i++) {
-      lines.push({
-        y: (H / LINE_COUNT) * i + Math.random() * (H / LINE_COUNT),
-        speed: 0.08 + Math.random() * 0.12, width: 0.3 + Math.random() * 0.5,
-        alpha: 0.2 + Math.random() * 0.6, len: 0.3 + Math.random() * 0.5,
-        xOff: Math.random() * W,
-      });
-    }
-  }
-
-  function draw() {
-    ctx.clearRect(0, 0, W, H);
-    ctx.strokeStyle = 'rgba(255,179,0,1)';
-    lines.forEach(function(ln) {
-      ln.y += ln.speed;
-      if (ln.y > H + 2) ln.y = -2;
-      var lineW = W * ln.len;
-      var startX = (ln.xOff % W);
-      ctx.globalAlpha = ln.alpha;
-      ctx.lineWidth   = ln.width;
-      ctx.beginPath();
-      ctx.moveTo(startX, ln.y);
-      ctx.lineTo(startX + lineW, ln.y);
-      ctx.stroke();
-      if (startX + lineW > W) {
-        ctx.beginPath();
-        ctx.moveTo(0, ln.y);
-        ctx.lineTo((startX + lineW) - W, ln.y);
-        ctx.stroke();
-      }
-    });
-    ctx.globalAlpha = 1;
-    requestAnimationFrame(draw);
-  }
-
-  window.addEventListener('resize', resize);
-  resize();
-  draw();
-
-  // Email obfuscation — address is never in the HTML source; assembled at runtime.
-  (function() {
-    var u = 'contact';
-    var d = 'directivecraft.com';
-    var addr = u + '@' + d;
-    document.querySelectorAll('.email-link').forEach(function(el) {
-      el.href = 'mailto:' + addr;
-    });
+  // Email is never in the HTML source — assembled at runtime so scrapers can't harvest it.
+  (function () {
+    var addr = 'contact' + '@' + 'directivecraft.com';
+    document.querySelectorAll('.email-link').forEach(function (el) { el.href = 'mailto:' + addr; });
   })();
 </script>
 

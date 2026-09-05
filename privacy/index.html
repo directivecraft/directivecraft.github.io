@@ -14,397 +14,310 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --black:      #0A0A0F;
-      --panel:      #13131F;
-      --border:     #1E1E32;
-      --amber:      #FFB300;
-      --amber-dim:  #FFB30028;
-      --amber-mid:  #FFB30055;
-      --text:       #E8E8F0;
-      --muted:      #7A7A9A;
-      --subtle:     #3A3A5A;
+      --ink:        #14304C;
+      --ink-sunk:   #10283F;
+      --rule:       #2E5175;
+      --rule-soft:  #23415F;
+      --chalk:      #EEF2F6;
+      --chalk-dim:  #A6C1D8;
+      --cyan:       #6FA6C8;
+      --signal:     #F26E4C;
+
+      --display: 'Archivo', system-ui, 'Segoe UI', Roboto, sans-serif;
+      --body:    'Public Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+      --mono:    'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+
+      --col: 44rem;
+      --wide: 48rem;
+      --pad: clamp(20px, 5vw, 40px);
     }
 
-    html { scroll-behavior: smooth; }
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 
     body {
-      background: var(--black);
-      color: var(--text);
-      font-family: 'Inter', sans-serif;
+      background-color: var(--ink);
+      color: var(--chalk);
+      font-family: var(--body);
       font-size: 16px;
-      line-height: 1.6;
+      line-height: 1.62;
       min-height: 100vh;
-      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
     }
 
-    #bgCanvas {
+    body::before {
+      content: "";
       position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
+      inset: 9px;
+      border: 1px solid var(--rule-soft);
       pointer-events: none;
-      z-index: 0;
-      opacity: 0.07;
+      z-index: 5;
     }
+    @media (max-width: 720px) { body::before { inset: 5px; } }
 
-    .wrapper {
-      position: relative;
-      z-index: 1;
-      max-width: 860px;
+    ::selection { background: var(--signal); color: #1A1A1A; }
+    :focus-visible { outline: 2px solid var(--signal); outline-offset: 3px; border-radius: 1px; }
+    * { scrollbar-color: var(--rule) transparent; }
+    ::-webkit-scrollbar { width: 12px; height: 12px; }
+    ::-webkit-scrollbar-track { background: var(--ink-sunk); }
+    ::-webkit-scrollbar-thumb { background: var(--rule); border: 3px solid var(--ink-sunk); }
+
+    main {
+      max-width: var(--wide);
       margin: 0 auto;
-      padding: 0 24px 64px;
+      border-left: 1px solid var(--rule);
+      border-right: 1px solid var(--rule-soft);
     }
+    .sheet { padding: 0 var(--pad); }
+    .col { max-width: var(--col); }
 
-    nav {
-      padding: 24px 0 0;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+    a {
+      color: var(--signal);
+      text-decoration: underline;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 0.18em;
+      text-decoration-color: color-mix(in srgb, var(--signal) 55%, transparent);
+      transition: text-decoration-color 0.15s ease;
     }
+    a:hover { text-decoration-color: var(--signal); }
 
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 11px;
-      text-decoration: none;
+    /* ── MASTHEAD ─────────────────────────────────────── */
+    header {
+      border-bottom: 2px solid var(--cyan);
+      max-width: var(--wide);
+      margin: 0 auto;
+      border-left: 1px solid var(--rule);
+      border-right: 1px solid var(--rule-soft);
     }
-    .wordmark {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 1.15rem;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      color: var(--text);
-    }
-    .wordmark span { color: var(--amber); }
-
-    .back-link {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 0.75rem;
-      font-weight: 500;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--muted);
-      text-decoration: none;
-      border: 1px solid var(--border);
-      padding: 5px 12px;
-      border-radius: 2px;
-      transition: color 0.2s, border-color 0.2s;
-    }
-    .back-link:hover { color: var(--amber); border-color: var(--amber-mid); }
-
-    .page-header {
-      padding: 48px 0 32px;
-      border-bottom: 1px solid var(--border);
-      margin-bottom: 40px;
-    }
-
-    .eyebrow {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 0.7rem;
-      font-weight: 500;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--amber);
-      margin-bottom: 12px;
-    }
-
-    h1 {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: clamp(1.8rem, 4vw, 2.6rem);
-      font-weight: 700;
-      letter-spacing: -0.03em;
-      color: var(--text);
-      margin-bottom: 12px;
-    }
-
-    .effective-date {
-      font-size: 0.8rem;
-      color: var(--subtle);
-      letter-spacing: 0.04em;
-    }
-
-    .summary-block {
-      background: var(--panel);
-      border: 1px solid var(--amber-dim);
-      border-left: 3px solid var(--amber);
-      padding: 24px 28px;
-      margin-bottom: 40px;
-    }
-
-    .summary-block .summary-label {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 0.65rem;
-      font-weight: 600;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--amber);
-      margin-bottom: 12px;
-    }
-
-    .summary-block p {
-      font-size: 0.95rem;
-      color: var(--text);
-      line-height: 1.7;
-    }
-
-    .fact-grid {
+    .titleblock {
+      padding: 0 var(--pad);
       display: grid;
-      grid-template-columns: repeat(6, 1fr);
-      gap: 1px;
-      background: var(--border);
-      border: 1px solid var(--border);
-      margin-bottom: 40px;
+      grid-template-columns: 1fr auto auto auto;
+      align-items: stretch;
     }
-
-    .fact-cell {
-      background: var(--panel);
-      padding: 16px 12px;
+    .titleblock > * { display: flex; align-items: center; padding: 15px 0; }
+    .titleblock > * + * {
+      border-left: 1px solid var(--rule-soft);
+      padding-left: 20px;
+      margin-left: 20px;
     }
+    .wordmark { display: flex; align-items: center; gap: 11px; text-decoration: none; color: var(--chalk); }
+    .wordmark:hover { text-decoration: none; }
+    .wordmark svg { display: block; flex: none; }
+    .wordmark b { font-family: var(--display); font-size: 1.06rem; font-weight: 700; letter-spacing: 0.01em; }
+    .tb-field { flex-direction: column; align-items: flex-start; gap: 2px; }
+    .tb-field .k { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--cyan); }
+    .tb-field .v { font-family: var(--mono); font-size: 0.8rem; color: var(--chalk-dim); white-space: nowrap; }
+    .tb-field .v a { color: var(--chalk-dim); text-decoration-color: color-mix(in srgb, var(--chalk-dim) 45%, transparent); }
+    .tb-field .v a:hover { color: var(--signal); text-decoration-color: var(--signal); }
 
-    @media (max-width: 640px) {
-      .fact-grid { grid-template-columns: repeat(3, 1fr); }
-    }
-
-    .fact-label {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 0.62rem;
-      font-weight: 600;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--subtle);
-      margin-bottom: 6px;
-    }
-
-    .fact-value {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 0.95rem;
-      font-weight: 600;
-      color: var(--text);
-    }
-    .fact-value.positive { color: var(--amber); }
-
-    .policy-section {
-      margin-bottom: 36px;
-    }
-
-    .policy-section h2 {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 0.9rem;
-      font-weight: 600;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--amber);
-      margin-bottom: 14px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .policy-section p {
-      font-size: 0.9rem;
-      color: var(--muted);
-      line-height: 1.8;
+    /* ── PAGE HEAD ────────────────────────────────────── */
+    .page-head { padding: clamp(40px, 6vw, 64px) 0 clamp(28px, 4vw, 40px); }
+    h1 {
+      font-family: var(--display);
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 700;
+      line-height: 1.07;
+      letter-spacing: -0.021em;
+      color: var(--chalk);
       margin-bottom: 12px;
     }
-    .policy-section p:last-child { margin-bottom: 0; }
-    .policy-section p strong { color: var(--text); font-weight: 500; }
+    .effective { font-family: var(--mono); font-size: 0.78rem; color: var(--cyan); letter-spacing: 0.04em; }
 
-    footer {
-      border-top: 1px solid var(--border);
-      padding: 24px 0 0;
-      margin-top: 48px;
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 12px;
+    .lead {
+      font-size: 1.06rem;
+      line-height: 1.66;
+      color: var(--chalk-dim);
+      max-width: 56ch;
+      padding: 22px 0 0;
+      margin-top: 24px;
+      border-top: 1px solid var(--rule-soft);
+    }
+    .lead strong { color: var(--chalk); font-weight: 500; }
+
+    /* ── FACT READOUT ─────────────────────────────────── */
+    .readout {
+      background: var(--ink-sunk);
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+    }
+    .readout-inner {
+      padding: 4px var(--pad);
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .cell { padding: 18px 20px 16px; border-left: 1px solid var(--rule-soft); }
+    .cell:nth-child(3n+1) { border-left: 0; padding-left: 0; }
+    .cell:nth-child(-n+3) { border-top: 0; }
+    .cell:nth-child(n+4) { border-top: 1px solid var(--rule-soft); }
+    .cell .k {
+      font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--cyan); display: block; margin-bottom: 9px;
+    }
+    .cell .v {
+      font-family: var(--mono); font-size: clamp(1.1rem, 3vw, 1.4rem);
+      font-weight: 500; color: var(--chalk); font-variant-numeric: tabular-nums; letter-spacing: 0.01em;
     }
 
-    .footer-mark {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 0.82rem;
-      font-weight: 600;
-      color: var(--subtle);
-    }
-    .footer-mark span { color: var(--amber); }
-
-    .footer-links {
-      display: flex;
-      gap: 20px;
-    }
-    .footer-links a {
-      font-size: 0.73rem;
-      color: var(--subtle);
-      text-decoration: none;
+    /* ── POLICY ───────────────────────────────────────── */
+    .policy { padding: clamp(34px, 4.5vw, 48px) 0; }
+    .policy + .policy { border-top: 1px solid var(--rule-soft); }
+    h2 {
+      font-family: var(--display);
+      font-size: clamp(1.02rem, 2vw, 1.2rem);
+      font-weight: 700;
       letter-spacing: 0.04em;
-      transition: color 0.2s;
+      text-transform: uppercase;
+      color: var(--chalk);
+      margin-bottom: 18px;
     }
-    .footer-links a:hover { color: var(--amber); }
+    .policy p { color: var(--chalk-dim); max-width: 62ch; margin-bottom: 14px; }
+    .policy p:last-child { margin-bottom: 0; }
+    .policy p strong { color: var(--chalk); font-weight: 500; }
 
-    @media (max-width: 600px) {
-      nav { flex-direction: column; align-items: flex-start; gap: 10px; }
-      .footer-links { flex-direction: column; gap: 8px; }
+    /* ── FOOTER ───────────────────────────────────────── */
+    footer {
+      border-top: 2px solid var(--cyan);
+      padding: 26px 0 clamp(32px, 6vw, 52px);
+      max-width: var(--wide);
+      margin: 0 auto;
+      border-left: 1px solid var(--rule);
+      border-right: 1px solid var(--rule-soft);
+    }
+    .foot-top {
+      display: flex; justify-content: space-between; align-items: baseline;
+      flex-wrap: wrap; gap: 14px 30px; margin-bottom: 20px;
+    }
+    .foot-mark { font-family: var(--display); font-weight: 700; font-size: 0.92rem; letter-spacing: 0.02em; color: var(--chalk-dim); }
+    .foot-links { display: flex; flex-wrap: wrap; gap: 8px 24px; font-family: var(--mono); font-size: 0.78rem; }
+    .foot-rev {
+      font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.03em; color: var(--cyan);
+      border-top: 1px solid var(--rule-soft); padding-top: 16px; max-width: 60ch;
+    }
+
+    @media (max-width: 720px) {
+      .titleblock { grid-template-columns: 1fr; gap: 2px; padding: 12px var(--pad) 13px; }
+      .titleblock > * { padding: 3px 0; }
+      .titleblock > .wordmark { padding-bottom: 11px; }
+      .titleblock > * + * { border-left: 0; padding-left: 0; margin-left: 0; }
+      .tb-field { flex-direction: row; gap: 7px; align-items: baseline; }
+      .tb-field .k { min-width: 3.4rem; }
+      .readout-inner { grid-template-columns: 1fr 1fr; }
+      .cell { padding: 15px 16px; border-left: 0; }
+      .cell:nth-child(odd) { padding-left: 0; }
+      .cell:nth-child(even) { border-left: 1px solid var(--rule-soft); }
+      .cell:nth-child(n+3) { border-top: 1px solid var(--rule-soft); }
+      .cell:nth-child(-n+2) { border-top: 0; }
     }
   </style>
 </head>
 <body>
 
-<canvas id="bgCanvas"></canvas>
-
-<div class="wrapper">
-
-  <nav>
-    <a class="logo" href="/">
-      <svg width="22" height="26" viewBox="0 0 22 26" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <polygon points="11,1 21,9 11,25 1,9" stroke="#FFB300" stroke-width="1.5" fill="none" stroke-linejoin="round"/>
-        <polygon points="11,6 16,10.5 11,20 6,10.5" stroke="#FFB300" stroke-width="0.75" fill="none" stroke-linejoin="round" opacity="0.4"/>
-        <circle cx="11" cy="13" r="1.2" fill="#FFB300" opacity="0.7"/>
-      </svg>
-      <div class="wordmark">Directive<span>Craft</span></div>
-    </a>
-    <a href="/" class="back-link">← Back</a>
-  </nav>
-
-  <div class="page-header">
-    <p class="eyebrow">Legal</p>
-    <h1>Privacy Policy</h1>
-    <p class="effective-date">Effective date: June 14, 2026 &nbsp;·&nbsp; Directive Craft LLC</p>
-  </div>
-
-  <div class="summary-block">
-    <div class="summary-label">Plain Language Summary</div>
-    <p>This website does not track you. No analytics. No cookies. No advertising. No data collection of any kind. If you contact us by email, we receive your email — that's it. There is nothing else to disclose.</p>
-  </div>
-
-  <div class="fact-grid">
-    <div class="fact-cell">
-      <div class="fact-label">Cookies</div>
-      <div class="fact-value positive">None</div>
+  <header>
+    <div class="titleblock">
+      <a class="wordmark" href="/">
+        <svg width="22" height="24" viewBox="0 0 22 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <polygon points="11,1.5 20.5,10 11,22.5 1.5,10" stroke="#6FA6C8" stroke-width="1.25" fill="none" stroke-linejoin="round"/>
+          <path d="M11 5.5 V14.5 M6.5 10 H15.5" stroke="#6FA6C8" stroke-width="1" stroke-linecap="round" opacity="0.65"/>
+          <circle cx="11" cy="10" r="1.15" fill="#EEF2F6"/>
+        </svg>
+        <b>DirectiveCraft</b>
+      </a>
+      <div class="tb-field"><span class="k">Doc</span><span class="v">DC-000-P</span></div>
+      <div class="tb-field"><span class="k">Sheet</span><span class="v">Privacy policy</span></div>
+      <div class="tb-field"><span class="k">Home</span><span class="v"><a href="/">&larr; Back</a></span></div>
     </div>
-    <div class="fact-cell">
-      <div class="fact-label">Analytics</div>
-      <div class="fact-value positive">None</div>
+  </header>
+
+  <main>
+    <section class="page-head">
+      <div class="sheet col">
+        <h1>Privacy Policy</h1>
+        <p class="effective">Effective 2026-06-14 &nbsp;·&nbsp; Directive Craft LLC</p>
+        <p class="lead">
+          This website does not track you. No analytics. No cookies. No advertising.
+          <strong>No data collection of any kind.</strong> If you contact us by email, we
+          receive your email &mdash; that&rsquo;s it. There is nothing else to disclose.
+        </p>
+      </div>
+    </section>
+
+    <div class="readout" aria-label="Privacy facts">
+      <div class="readout-inner">
+        <div class="cell"><span class="k">Cookies</span><span class="v">None</span></div>
+        <div class="cell"><span class="k">Analytics</span><span class="v">None</span></div>
+        <div class="cell"><span class="k">Tracking scripts</span><span class="v">None</span></div>
+        <div class="cell"><span class="k">Advertising</span><span class="v">None</span></div>
+        <div class="cell"><span class="k">Data sold</span><span class="v">Never</span></div>
+        <div class="cell"><span class="k">Account required</span><span class="v">No</span></div>
+      </div>
     </div>
-    <div class="fact-cell">
-      <div class="fact-label">Tracking Scripts</div>
-      <div class="fact-value positive">None</div>
-    </div>
-    <div class="fact-cell">
-      <div class="fact-label">Advertising</div>
-      <div class="fact-value positive">None</div>
-    </div>
-    <div class="fact-cell">
-      <div class="fact-label">Data Sold</div>
-      <div class="fact-value positive">Never</div>
-    </div>
-    <div class="fact-cell">
-      <div class="fact-label">Account Required</div>
-      <div class="fact-value positive">No</div>
-    </div>
-  </div>
 
-  <div class="policy-section">
-    <h2>Information We Collect</h2>
-    <p>The directivecraft.com website does not collect, store, or process any personal information about visitors. There are no analytics tools, tracking pixels, session recording scripts, or advertising networks on this site.</p>
-    <p>This site is hosted on GitHub Pages. GitHub may log standard server-side request data (IP address, browser type, pages requested, timestamps) as part of normal hosting infrastructure. This data is subject to <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener noreferrer" style="color: var(--amber); text-decoration: none;">GitHub's Privacy Statement</a> and is not accessible to or controlled by Directive Craft LLC.</p>
-  </div>
+    <section class="policy">
+      <div class="sheet col">
+        <h2>Information we collect</h2>
+        <p>The directivecraft.com website does not collect, store, or process any personal information about visitors. There are no analytics tools, tracking pixels, session recording scripts, or advertising networks on this site.</p>
+        <p>This site is hosted on GitHub Pages. GitHub may log standard server-side request data (IP address, browser type, pages requested, timestamps) as part of normal hosting infrastructure. This data is subject to <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener noreferrer">GitHub&rsquo;s Privacy Statement</a> and is not accessible to or controlled by Directive Craft LLC.</p>
+      </div>
+    </section>
 
-  <div class="policy-section">
-    <h2>Email Contact</h2>
-    <p>If you contact us by email, we receive and read your message. We use that information only to respond to you. We do not add you to mailing lists, share your address with third parties, or use your contact for any purpose beyond the conversation you initiated.</p>
-    <p>Our email uses privacy-focused forwarding from our domain address to a private inbox. No message content is stored on intermediate servers beyond standard delivery processing.</p>
-  </div>
+    <section class="policy">
+      <div class="sheet col">
+        <h2>Email contact</h2>
+        <p>If you contact us by email, we receive and read your message. We use that information only to respond to you. We do not add you to mailing lists, share your address with third parties, or use your contact for any purpose beyond the conversation you initiated.</p>
+        <p>Our email uses privacy-focused forwarding from our domain address to a private inbox. No message content is stored on intermediate servers beyond standard delivery processing.</p>
+      </div>
+    </section>
 
-  <div class="policy-section">
-    <h2>Fonts and External Resources</h2>
-    <p>This site loads fonts from Google Fonts. This request is made directly from your browser to Google's servers and is subject to <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" style="color: var(--amber); text-decoration: none;">Google's Privacy Policy</a>. No other external resources are loaded.</p>
-  </div>
+    <section class="policy">
+      <div class="sheet col">
+        <h2>Fonts and external resources</h2>
+        <p>All fonts on this site are self-hosted from directivecraft.com. This site makes <strong>no requests to any third-party server</strong> &mdash; no font CDN, no script host, no external stylesheet, no image host. Nothing is loaded from a domain other than this one.</p>
+      </div>
+    </section>
 
-  <div class="policy-section">
-    <h2>Cookies and Local Storage</h2>
-    <p>This site does not set cookies. It does not use localStorage, sessionStorage, or any other client-side storage mechanism.</p>
-  </div>
+    <section class="policy">
+      <div class="sheet col">
+        <h2>Cookies and local storage</h2>
+        <p>This site does not set cookies. It does not use localStorage, sessionStorage, or any other client-side storage mechanism.</p>
+      </div>
+    </section>
 
-  <div class="policy-section">
-    <h2>Third-Party Services</h2>
-    <p>This site does not integrate with social media platforms, advertising networks, payment processors, or any other third-party services. No share buttons, like buttons, or embedded third-party content is present.</p>
-  </div>
+    <section class="policy">
+      <div class="sheet col">
+        <h2>Third-party services</h2>
+        <p>This site does not integrate with social media platforms, advertising networks, payment processors, or any other third-party services. No share buttons, like buttons, or embedded third-party content is present.</p>
+      </div>
+    </section>
 
-  <div class="policy-section">
-    <h2>Changes to This Policy</h2>
-    <p>If this policy changes, the updated version will be posted here with a revised effective date. Because no data is collected, substantive changes are unlikely.</p>
-  </div>
+    <section class="policy">
+      <div class="sheet col">
+        <h2>Changes to this policy</h2>
+        <p>If this policy changes, the updated version will be posted here with a revised effective date. Because no data is collected, substantive changes are unlikely.</p>
+      </div>
+    </section>
 
-  <div class="policy-section">
-    <h2>Contact</h2>
-    <p>Questions about this policy can be sent to the address on our <a href="/" style="color: var(--amber); text-decoration: none;">contact page</a>.</p>
-  </div>
+    <section class="policy">
+      <div class="sheet col">
+        <h2>Contact</h2>
+        <p>Questions about this policy can be sent to the address on our <a href="/">contact page</a>.</p>
+      </div>
+    </section>
+  </main>
 
   <footer>
-    <div class="footer-mark">Directive<span>Craft</span> &nbsp;·&nbsp; LLC</div>
-    <div class="footer-links">
-      <a href="/">Home</a>
-      <a href="/testing">How We Build</a>
-      <a href="https://freqcraft.app" target="_blank" rel="noopener noreferrer">FreqCraft</a>
+    <div class="sheet">
+      <div class="foot-top">
+        <span class="foot-mark">DirectiveCraft &nbsp;·&nbsp; LLC</span>
+        <nav class="foot-links">
+          <a href="/">Home</a>
+          <a href="/testing">Test report</a>
+          <a href="https://freqcraft.app" target="_blank" rel="noopener noreferrer">FreqCraft</a>
+        </nav>
+      </div>
+      <p class="foot-rev">Privacy policy · Doc DC-000-P · Effective 2026-06-14 · No tracking on this page</p>
     </div>
   </footer>
-
-</div>
-
-<script>
-  var canvas = document.getElementById('bgCanvas');
-  var ctx    = canvas.getContext('2d');
-  var W, H;
-  var lines  = [];
-  var LINE_COUNT = 18;
-
-  function resize() {
-    W = canvas.width  = window.innerWidth;
-    H = canvas.height = window.innerHeight;
-    initLines();
-  }
-
-  function initLines() {
-    lines = [];
-    for (var i = 0; i < LINE_COUNT; i++) {
-      lines.push({
-        y:     (H / LINE_COUNT) * i + Math.random() * (H / LINE_COUNT),
-        speed: 0.08 + Math.random() * 0.12,
-        width: 0.3 + Math.random() * 0.5,
-        alpha: 0.2 + Math.random() * 0.6,
-        len:   0.3 + Math.random() * 0.5,
-        xOff:  Math.random() * W,
-      });
-    }
-  }
-
-  function draw() {
-    ctx.clearRect(0, 0, W, H);
-    ctx.strokeStyle = 'rgba(255,179,0,1)';
-    lines.forEach(function(ln) {
-      ln.y += ln.speed;
-      if (ln.y > H + 2) ln.y = -2;
-      var lineW  = W * ln.len;
-      var startX = (ln.xOff % W);
-      ctx.globalAlpha = ln.alpha;
-      ctx.lineWidth   = ln.width;
-      ctx.beginPath();
-      ctx.moveTo(startX, ln.y);
-      ctx.lineTo(startX + lineW, ln.y);
-      ctx.stroke();
-      if (startX + lineW > W) {
-        ctx.beginPath();
-        ctx.moveTo(0, ln.y);
-        ctx.lineTo((startX + lineW) - W, ln.y);
-        ctx.stroke();
-      }
-    });
-    ctx.globalAlpha = 1;
-    requestAnimationFrame(draw);
-  }
-
-  window.addEventListener('resize', resize);
-  resize();
-  draw();
-</script>
 
 </body>
 </html>
