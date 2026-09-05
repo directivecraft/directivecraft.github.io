@@ -21,8 +21,9 @@
       --chalk:      #EEF2F6;   /* primary text */
       --chalk-dim:  #A6C1D8;   /* secondary text — blue-tinted, not gray */
       --cyan:       #6FA6C8;   /* diazo cyan — labels, tertiary */
-      --signal:     #FB7451;   /* accent — live / actionable ONLY */
-      --display: 'Archivo', 'Arial Narrow', system-ui, sans-serif;
+      --signal:     #F26E4C;   /* accent — live / actionable ONLY */
+
+      --display: 'Archivo', system-ui, 'Segoe UI', Roboto, sans-serif;
       --body:    'Public Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
       --mono:    'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
 
@@ -196,6 +197,15 @@
       letter-spacing: 0.01em;
     }
     .cell .v small { color: var(--chalk-dim); font-size: 0.72em; font-weight: 400; }
+    .readout-note {
+      margin: 0 var(--pad);
+      padding: 13px 0 16px;
+      border-top: 1px solid var(--rule-soft);
+      font-size: 0.82rem;
+      line-height: 1.55;
+      color: var(--chalk-dim);
+      max-width: 62ch;
+    }
 
     /* ── SECTIONS ─────────────────────────────────────── */
     section.block { padding: clamp(34px, 4.5vw, 48px) 0; }
@@ -268,10 +278,9 @@
       font-size: 0.7rem;
       font-weight: 500;
       letter-spacing: 0.1em;
-      color: var(--signal);
+      color: var(--cyan);
       transform: translateY(-0.15em);
     }
-    .entry h3.muted .ord { color: var(--cyan); }
     .entry .meta {
       font-family: var(--mono);
       font-size: 0.74rem;
@@ -312,27 +321,29 @@
       letter-spacing: 0.06em;
       color: var(--signal);
       border: 3px solid var(--signal);
-      border-radius: 6px;
       padding: 8px 28px 10px;
       transform: rotate(var(--deg));
       position: relative;
       line-height: 1;
       text-shadow: 0 0 1px color-mix(in srgb, var(--signal) 40%, transparent);
-      box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--signal) 25%, transparent);
-      animation: stamp-in 560ms cubic-bezier(0.16, 1, 0.3, 1) both;
     }
     .stamp::after {
       content: "";
       position: absolute;
       inset: 3px;
       border: 1px solid color-mix(in srgb, var(--signal) 45%, transparent);
-      border-radius: 3px;
       pointer-events: none;
     }
+    .gatemark.armed .stamp { animation: stamp-in 560ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+    .gatemark.armed .cap { animation: cap-in 620ms 120ms ease-out both; }
     @keyframes stamp-in {
       0%   { opacity: 0; transform: rotate(-7deg) scale(1.22); }
       55%  { opacity: 1; }
       100% { opacity: 1; transform: rotate(var(--deg)) scale(1); }
+    }
+    @keyframes cap-in {
+      0% { opacity: 0; transform: translateY(6px); }
+      100% { opacity: 1; transform: none; }
     }
     .gatemark .cap {
       font-family: var(--mono);
@@ -342,7 +353,7 @@
     }
     .gatemark .cap b { color: var(--chalk); font-weight: 500; display: block; }
     @media (prefers-reduced-motion: reduce) {
-      .stamp { animation: none; }
+      .gatemark.armed .stamp, .gatemark.armed .cap { animation: none; }
       html { scroll-behavior: auto; }
       .act .arr, .act:hover .arr { transition: none; transform: none; }
     }
@@ -350,6 +361,7 @@
     /* ── CONTACT + FOOTER ─────────────────────────────── */
     .contact { padding: clamp(44px, 7vw, 64px) 0; border-top: 1px solid var(--rule-soft); }
     .contact p { max-width: 52ch; color: var(--chalk-dim); margin-bottom: 18px; }
+    .ns-mail { font-family: var(--mono); font-size: 0.82rem; color: var(--chalk); margin-top: 16px; }
 
     footer {
       border-top: 2px solid var(--cyan);
@@ -407,8 +419,8 @@
       <a class="wordmark" href="/">
         <svg width="22" height="24" viewBox="0 0 22 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <polygon points="11,1.5 20.5,10 11,22.5 1.5,10" stroke="#6FA6C8" stroke-width="1.25" fill="none" stroke-linejoin="round"/>
-          <path d="M11 5.5 V14.5 M6.5 10 H15.5" stroke="#FB7451" stroke-width="1.1" stroke-linecap="round"/>
-          <circle cx="11" cy="10" r="1.15" fill="#FB7451"/>
+          <path d="M11 5.5 V14.5 M6.5 10 H15.5" stroke="#6FA6C8" stroke-width="1" stroke-linecap="round" opacity="0.65"/>
+          <circle cx="11" cy="10" r="1.15" fill="#EEF2F6"/>
         </svg>
         <b>DirectiveCraft</b>
       </a>
@@ -424,7 +436,7 @@
       <div class="sheet col">
         <h1>Precision tools. Every value visible. Nothing leaves your device.</h1>
         <p class="standfirst">
-          Directive Craft is an independent software studio in Sheridan, Wyoming.
+          DirectiveCraft is an independent software studio in Sheridan, Wyoming.
           Focused tools, <strong>sold once and yours to keep</strong>. Built to a
           written standard, documented in public. This page is the record.
         </p>
@@ -440,6 +452,7 @@
         <div class="cell"><span class="k">Release devices</span><span class="v">02</span></div>
         <div class="cell"><span class="k">Subscriptions</span><span class="v">00</span></div>
       </div>
+      <p class="readout-note">That suite has twice caught a defect code review missed, one of them after four review rounds. <a href="/testing">Read the log &rarr;</a></p>
     </div>
 
     <!-- ══ REGISTER ════════════════════════════════════ -->
@@ -527,6 +540,7 @@
           how a tool works. Built and maintained by Directive Craft LLC in Wyoming.
         </p>
         <a class="act email-link" href="#">Contact the studio <span class="arr">&rarr;</span></a>
+        <noscript><p class="ns-mail">Direct email: contact&#64;directivecraft&#46;com</p></noscript>
       </div>
     </section>
   </main>
@@ -551,12 +565,44 @@
   // Email is never in the HTML source — assembled at runtime so scrapers can't harvest it.
   // Change the two parts below if the address changes; never put the full address in HTML.
   (function () {
-    var u = 'contact';
-    var d = 'directivecraft.com';
-    var addr = u + '@' + d;
+    var addr = 'contact' + '@' + 'directivecraft.com';
     document.querySelectorAll('.email-link').forEach(function (el) {
       el.href = 'mailto:' + addr;
     });
+  })();
+
+  // The release gate resolves when the visitor brings it into view.
+  (function () {
+    var g = document.querySelector('.gatemark');
+    if (!g) return;
+    var done = false;
+    function arm() {
+      if (done) return;
+      done = true;
+      g.classList.add('armed');
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+    }
+    function inView() {
+      var r = g.getBoundingClientRect();
+      var vh = window.innerHeight || document.documentElement.clientHeight;
+      return r.top < vh * 0.85 && r.bottom > vh * 0.1;
+    }
+    var ticking = false;
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(function () { ticking = false; if (inView()) arm(); });
+    }
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (es) {
+        for (var i = 0; i < es.length; i++) { if (es[i].isIntersecting) { arm(); io.disconnect(); } }
+      }, { threshold: 0.35 });
+      io.observe(g);
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    if (inView()) arm();
   })();
 </script>
 
