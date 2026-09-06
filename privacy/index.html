@@ -22,6 +22,7 @@
       --chalk-dim:  #A6C1D8;
       --cyan:       #6FA6C8;
       --signal:     #F26E4C;
+      --grid:       rgba(166,193,216,0.16);  /* blueprint dot grid — tune the alpha here */
 
       --display: 'Archivo', system-ui, 'Segoe UI', Roboto, sans-serif;
       --body:    'Public Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
@@ -36,6 +37,12 @@
 
     body {
       background-color: var(--ink);
+      /* Blueprint dot grid — two dotted rules crossing at 36px squares.
+         Scrolls with the page: it is the paper the sheet sits on, not an overlay. */
+      background-image:
+        radial-gradient(circle at 1px 1px, var(--grid) 0.75px, transparent 0.85px),
+        radial-gradient(circle at 1px 1px, var(--grid) 0.75px, transparent 0.85px);
+      background-size: 36px 5px, 5px 36px;
       color: var(--chalk);
       font-family: var(--body);
       font-size: 16px;
@@ -107,6 +114,17 @@
     .wordmark b { font-family: var(--display); font-size: 1.06rem; font-weight: 700; letter-spacing: 0.01em; }
     .tb-field { flex-direction: column; align-items: flex-start; gap: 2px; }
     .tb-field .k { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--cyan); }
+    /* ── SHEET INDEX (header nav) ─────────────────────── */
+    .sheet-index {
+      padding: 10px var(--pad);
+      border-top: 1px solid var(--rule-soft);
+      display: flex; flex-wrap: wrap; gap: 8px 22px;
+      font-family: var(--mono); font-size: 0.78rem;
+    }
+    .sheet-index a { color: var(--chalk-dim); text-decoration: none; }
+    .sheet-index a:hover { color: var(--signal); }
+    .sheet-index a:focus-visible { outline: 2px solid var(--signal); outline-offset: 3px; }
+
     .tb-field .v { font-family: var(--mono); font-size: 0.8rem; color: var(--chalk-dim); white-space: nowrap; }
     .tb-field .v a { color: var(--chalk-dim); text-decoration-color: color-mix(in srgb, var(--chalk-dim) 45%, transparent); }
     .tb-field .v a:hover { color: var(--signal); text-decoration-color: var(--signal); }
@@ -227,6 +245,12 @@
       <div class="tb-field"><span class="k">Sheet</span><span class="v">Privacy policy</span></div>
       <div class="tb-field"><span class="k">Home</span><span class="v"><a href="/">&larr; Back</a></span></div>
     </div>
+    <nav class="sheet-index" aria-label="Pages">
+      <a href="/">Home</a>
+      <a href="/testing">Test report</a>
+      <a href="https://freqcraft.app" target="_blank" rel="noopener noreferrer">FreqCraft</a>
+      <a class="email-link" href="#">Contact</a>
+    </nav>
   </header>
 
   <main>
@@ -313,11 +337,24 @@
           <a href="/">Home</a>
           <a href="/testing">Test report</a>
           <a href="https://freqcraft.app" target="_blank" rel="noopener noreferrer">FreqCraft</a>
+          <a class="email-link" href="#">Contact</a>
         </nav>
       </div>
       <p class="foot-rev">Privacy policy · Doc DC-000-P · Effective 2026-06-14 · No tracking on this page</p>
     </div>
   </footer>
+
+
+<script>
+  // Email is never in the HTML source — assembled at runtime so scrapers can't harvest it.
+  // Change the two parts below if the address changes; never put the full address in HTML.
+  (function () {
+    var addr = 'contact' + '@' + 'directivecraft.com';
+    document.querySelectorAll('.email-link').forEach(function (el) {
+      el.href = 'mailto:' + addr;
+    });
+  })();
+</script>
 
 </body>
 </html>

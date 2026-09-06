@@ -22,6 +22,7 @@
       --chalk-dim:  #A6C1D8;   /* secondary text — blue-tinted, not gray */
       --cyan:       #6FA6C8;   /* diazo cyan — labels, tertiary */
       --signal:     #F26E4C;   /* accent — live / actionable ONLY */
+      --grid:       rgba(166,193,216,0.16);  /* blueprint dot grid — tune the alpha here */
 
       --display: 'Archivo', system-ui, 'Segoe UI', Roboto, sans-serif;
       --body:    'Public Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
@@ -36,6 +37,12 @@
 
     body {
       background-color: var(--ink);
+      /* Blueprint dot grid — two dotted rules crossing at 36px squares.
+         Scrolls with the page: it is the paper the sheet sits on, not an overlay. */
+      background-image:
+        radial-gradient(circle at 1px 1px, var(--grid) 0.75px, transparent 0.85px),
+        radial-gradient(circle at 1px 1px, var(--grid) 0.75px, transparent 0.85px);
+      background-size: 36px 5px, 5px 36px;
       color: var(--chalk);
       font-family: var(--body);
       font-size: 16px;
@@ -125,6 +132,17 @@
     .tb-field { flex-direction: column; align-items: flex-start; gap: 2px; }
     .tb-field .k { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--cyan); }
     .tb-field .v { font-family: var(--mono); font-size: 0.8rem; color: var(--chalk-dim); white-space: nowrap; }
+    /* ── SHEET INDEX (header nav) ─────────────────────── */
+    .sheet-index {
+      padding: 10px var(--pad);
+      border-top: 1px solid var(--rule-soft);
+      display: flex; flex-wrap: wrap; gap: 8px 22px;
+      font-family: var(--mono); font-size: 0.78rem;
+    }
+    .sheet-index a { color: var(--chalk-dim); text-decoration: none; }
+    .sheet-index a:hover { color: var(--signal); }
+    .sheet-index a:focus-visible { outline: 2px solid var(--signal); outline-offset: 3px; }
+
 
     /* ── STATEMENT ────────────────────────────────────── */
     .statement { padding: clamp(40px, 6vw, 64px) 0 clamp(36px, 5vw, 56px); }
@@ -428,6 +446,12 @@
       <div class="tb-field"><span class="k">Sheet</span><span class="v">Studio profile</span></div>
       <div class="tb-field"><span class="k">Rev</span><span class="v">2026-09-05</span></div>
     </div>
+    <nav class="sheet-index" aria-label="Pages">
+      <a href="/testing">Test report</a>
+      <a href="/privacy">Privacy</a>
+      <a href="https://freqcraft.app" target="_blank" rel="noopener noreferrer">FreqCraft</a>
+      <a class="email-link" href="#">Contact</a>
+    </nav>
   </header>
 
   <main>
@@ -494,7 +518,7 @@
         <h2>What has shipped</h2>
         <div class="entry">
           <h3><span class="ord">001</span>FreqCraft</h3>
-          <p class="meta">Android &nbsp;·&nbsp; v1.1.0 &nbsp;·&nbsp; Flutter/Dart &nbsp;·&nbsp; com.directivecraft.freqcraft &nbsp;·&nbsp; live on Google&nbsp;Play</p>
+          <p class="meta">Android &nbsp;·&nbsp; v1.1.2 &nbsp;·&nbsp; Flutter/Dart &nbsp;·&nbsp; com.directivecraft.freqcraft &nbsp;·&nbsp; live on Google&nbsp;Play</p>
           <p>
             A precision binaural and isochronic tone generator. Every Hz value visible,
             every parameter editable, multi-voice sessions, a live waveform, timed
@@ -521,12 +545,12 @@
         <h2>The release gate</h2>
         <p class="intro">
           Nothing leaves this studio without a written ship / no-ship decision against
-          every criterion. FreqCraft&nbsp;1.1.0 cleared it on two physical handsets — the
+          every criterion. FreqCraft&nbsp;1.1.2 cleared it on two physical handsets — the
           oldest and the newest Android versions it supports.
         </p>
         <div class="gatemark">
           <div class="stamp" role="img" aria-label="Current status: pass">PASS</div>
-          <p class="cap"><b>FreqCraft 1.1.0</b>211 / 211 automated · 22 manual procedures · 2 devices · 2026</p>
+          <p class="cap"><b>FreqCraft 1.1.2</b>211 / 211 automated · 22 manual procedures · 2 devices · 2026</p>
         </div>
       </div>
     </section>
